@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Game Lab｜自製遊戲機台教學</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="#machines">機台教學</a>
+      <a href="ai-collaboration.html">AI 協作</a>
+      <a href="#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid-app">
+    <div>
+      <span class="eyebrow">// DIY ARCADE WORKSHOP</span>
+      <h1>用 Arduino，<br>做出你自己的遊戲機台。</h1>
+      <p class="lead">從一顆按鈕、一片 LED 矩陣，到會轉會夾的機構——這裡收錄七種可以實際做出來的遊戲機台教學，並教你如何借助 AI 一起設計關卡、寫程式、抓 bug。全站公開免費，不需要註冊帳號。</p>
+      <div class="btn-row">
+        <a href="#machines" class="btn btn-primary">瀏覽機台教學</a>
+        <a href="ai-collaboration.html" class="btn btn-ghost">AI 協作怎麼用</a>
+      </div>
+    </div>
+
+    <a class="assistant-panel" href="ai-collaboration.html">
+      <div class="assistant-head">
+        <span class="title"><span class="dot"></span> AI 協作示範</span>
+        <span class="badge">情境範例</span>
+      </div>
+      <div class="assistant-body">
+        <div class="chat-bubble bot">
+          <span class="who">AI 助理</span>
+          剛入門的話，建議從 <strong>M1 LED 矩陣貪食蛇</strong> 或 <strong>M2 反應力搶答機</strong> 開始，接線少、程式邏輯也單純，做完會比較有信心挑戰後面的機台。
+        </div>
+        <div class="chat-bubble bot">
+          <span class="who">AI 助理</span>
+          如果你想做 <strong>M7 解謎密室機關</strong>，我可以陪你先把三道關卡的過關條件整理成表格，再幫你把表格轉成程式骨架。
+        </div>
+      </div>
+      <div class="assistant-cta">
+        <span>這是靜態情境示範</span>
+        <span class="go">前往完整 AI 協作教學 →</span>
+      </div>
+    </a>
+
+    <div class="progress-panel">
+      <div class="progress-head"><h3>學習路徑</h3><span>3 個階段</span></div>
+      <div class="progress-item">
+        <span class="num">1</span>
+        <div><strong>挑機台</strong><p>依難度標示選一台開始</p></div>
+      </div>
+      <div class="progress-arrow">↓</div>
+      <div class="progress-item">
+        <span class="num">2</span>
+        <div><strong>備零件、接線</strong><p>照材料清單與接線表施工</p></div>
+      </div>
+      <div class="progress-arrow">↓</div>
+      <div class="progress-item">
+        <span class="num">3</span>
+        <div><strong>燒錄、AI 協作除錯</strong><p>跑起來、卡關就找 AI 一起排查</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <div class="flow-row">
+      <div class="flow-step">
+        <div class="flow-icon">01</div>
+        <div><h4>挑機台</h4><p>七種難度由淺入深，先看總覽再決定</p></div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <div class="flow-icon">02</div>
+        <div><h4>備零件、接線</h4><p>照著材料表與接線表在麵包板上完成</p></div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <div class="flow-icon">03</div>
+        <div><h4>燒錄、AI 協作</h4><p>程式燒進去、卡關就跟 AI 一起排查</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// GET STARTED</span>
+      <h2>從這三個地方開始</h2>
+      <p>不管你是先想清楚要做哪台機台，還是先搞懂零件怎麼接，或是想先了解 AI 能幫上什麼忙，都可以從這裡直接切入。</p>
+    </div>
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <span class="ribbon">推薦從這裡開始</span>
+        <div class="icon-block">M1–M7</div>
+        <h3>機台教學庫</h3>
+        <p class="desc">七種可以實際做出來的遊戲機台，難度由淺入深排列，每頁都有完整的玩法、材料與接線說明。</p>
+        <ul class="check-list">
+          <li>難度與製作時間標示</li>
+          <li>材料清單與接線腳位對照表</li>
+          <li>可直接參考的核心程式邏輯</li>
+        </ul>
+        <div class="card-btn-row">
+          <a href="#machines" class="btn btn-primary btn-sm">瀏覽機台教學 →</a>
+          <a href="machines/led-matrix-snake.html" class="btn btn-ghost btn-sm">先看最入門的一台</a>
+        </div>
+      </div>
+
+      <div class="feature-card blue">
+        <div class="icon-block">BOM</div>
+        <h3>零件與接線基礎</h3>
+        <p class="desc">動手做之前，先搞懂所有機台共用的基本工具、開發環境與接線習慣，之後每一頁都能直接照做。</p>
+        <ul class="check-list">
+          <li>共用硬體與開發環境清單</li>
+          <li>供電與安全注意事項</li>
+          <li>建議的施工與除錯順序</li>
+        </ul>
+        <div class="card-btn-row">
+          <a href="#start" class="btn btn-blue btn-sm">查看基礎指南 →</a>
+        </div>
+      </div>
+
+      <div class="feature-card green">
+        <div class="icon-block">AI</div>
+        <h3>AI 協作教學</h3>
+        <p class="desc">關卡邏輯與劇情怎麼跟 AI 一起發想、程式除錯怎麼跟 AI 描述問題，用解謎密室機關當完整案例示範。</p>
+        <ul class="check-list">
+          <li>關卡設計與劇情發想提示詞</li>
+          <li>程式除錯實例與提問技巧</li>
+          <li>從發想到完成的完整流程</li>
+        </ul>
+        <div class="card-btn-row">
+          <a href="ai-collaboration.html" class="btn btn-green btn-sm">進入 AI 協作教學 →</a>
+          <a href="ai-collaboration.html#design-prompts" class="btn btn-ghost btn-sm">看提示詞範本</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="start">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// BEFORE YOU START</span>
+      <h2>開始之前，先備好這些</h2>
+      <p>七個教學都建立在同一套基礎工具上，準備好之後就能照著任何一頁直接開工。</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <span class="ref">基本工具</span>
+        <h3>硬體</h3>
+        <p>Arduino Uno 或相容板一片、USB 連接線、麵包板、跳線若干、三用電表（除錯很好用）。</p>
+      </div>
+      <div class="card">
+        <span class="ref">開發環境</span>
+        <h3>軟體</h3>
+        <p>電腦安裝 Arduino IDE（或 VS Code + PlatformIO），並依機台需求安裝對應的函式庫，如 <code>MPU6050</code>、<code>Servo</code>、<code>LedControl</code>。</p>
+      </div>
+      <div class="card">
+        <span class="ref">建議習慣</span>
+        <h3>做法</h3>
+        <p>先在麵包板上把電路接好、程式燒錄成功、遊戲邏輯跑順，最後才動手做外殼與機構，避免拆了重接。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="machines">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// MACHINE CATALOG</span>
+      <h2>七種機台，七種玩法</h2>
+      <p>每頁都包含玩法說明、材料清單、接線重點、核心程式碼與延伸挑戰，難度由淺入深排列。</p>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <span class="ref">M1 · 入門</span>
+        <h3>LED 矩陣貪食蛇機台</h3>
+        <p>用 8x8 LED 矩陣與搖桿做出經典貪食蛇，練習矩陣掃描與方向控制的基本功。</p>
+        <div class="tag-row"><span class="tag">LedControl</span><span class="tag">搖桿</span></div>
+        <a class="card-link" href="machines/led-matrix-snake.html">查看教學 →</a>
+      </div>
+
+      <div class="card">
+        <span class="ref">M2 · 入門</span>
+        <h3>反應力搶答機</h3>
+        <p>多人搶答＋反應速度測試，學會用中斷與計時器做出公平判定的計分機台。</p>
+        <div class="tag-row"><span class="tag">按鈕</span><span class="tag">計時</span></div>
+        <a class="card-link" href="machines/reaction-button.html">查看教學 →</a>
+      </div>
+
+      <div class="card">
+        <span class="ref">M3 · 進階</span>
+        <h3>搖桿躲避機</h3>
+        <p>OLED 螢幕上躲避從畫面邊緣冒出的障礙物，練習即時碰撞判定與難度遞增。</p>
+        <div class="tag-row"><span class="tag">OLED</span><span class="tag">搖桿</span></div>
+        <a class="card-link" href="machines/joystick-dodge.html">查看教學 →</a>
+      </div>
+
+      <div class="card">
+        <span class="ref">M4 · 進階</span>
+        <h3>傾斜迷宮機</h3>
+        <p>用陀螺儀感測傾斜角度，控制畫面上的球走出迷宮，體會感測器濾波的重要性。</p>
+        <div class="tag-row"><span class="tag">MPU6050</span><span class="tag">OLED</span></div>
+        <a class="card-link" href="machines/tilt-maze.html">查看教學 →</a>
+      </div>
+
+      <div class="card">
+        <span class="ref">M5 · 進階</span>
+        <h3>彈珠彈跳台</h3>
+        <p>紅外線感測器偵測彈珠位置，伺服馬達驅動擋板彈開，做出迷你彈珠台機構。</p>
+        <div class="tag-row"><span class="tag">紅外線感測</span><span class="tag">伺服馬達</span></div>
+        <a class="card-link" href="machines/pinball.html">查看教學 →</a>
+      </div>
+
+      <div class="card">
+        <span class="ref">M6 · 高階</span>
+        <h3>夾娃娃機</h3>
+        <p>三軸步進馬達／伺服馬達控制夾爪移動與升降，最考驗機構設計與時序控制。</p>
+        <div class="tag-row"><span class="tag">步進馬達</span><span class="tag">機構設計</span></div>
+        <a class="card-link" href="machines/claw-machine.html">查看教學 →</a>
+      </div>
+
+      <div class="card">
+        <span class="ref">M7 · 高階</span>
+        <h3>解謎密室機關</h3>
+        <p>RFID、鍵盤密碼、光線序列三道機關串成一個小型密室逃脫，也是 AI 協作示範案例。</p>
+        <div class="tag-row"><span class="tag">RFID</span><span class="tag">鍵盤</span><span class="tag">多重邏輯</span></div>
+        <a class="card-link" href="machines/puzzle-escape.html">查看教學 →</a>
+      </div>
+
+      <div class="card highlight">
+        <span class="ref">EXTRA · AI 協作</span>
+        <h3>如何用 AI 一起做機台</h3>
+        <p>從關卡邏輯與劇情發想，到程式碼協作與除錯，用解謎機關作為完整案例示範。</p>
+        <div class="tag-row"><span class="tag">關卡設計</span><span class="tag">程式除錯</span></div>
+        <a class="card-link" href="ai-collaboration.html">查看教學 →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="info-strip">
+  <div class="wrap info-grid">
+    <div class="info-item">
+      <span class="mark">$0</span>
+      <div><strong>完全免費使用</strong><p>全站公開，不用註冊、不用付費</p></div>
+    </div>
+    <div class="info-item">
+      <span class="mark">↓</span>
+      <div><strong>可下載到本機</strong><p>整包 HTML 下載後離線也能瀏覽</p></div>
+    </div>
+    <div class="info-item">
+      <span class="mark">!</span>
+      <div><strong>僅供學習參考</strong><p>馬達、電磁鎖等機構請留意安全</p></div>
+    </div>
+    <div class="info-item">
+      <span class="mark">+</span>
+      <div><strong>持續擴充中</strong><p>歡迎照同樣的架構自行擴充機台</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考，實作機構請留意馬達與電源安全</span>
+  </div>
+</footer>
+
+</body>
+</html>
