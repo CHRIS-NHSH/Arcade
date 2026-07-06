@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 彈珠彈跳台｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M5 彈珠彈跳台</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M5 · 進階機台</span>
+    <h1>彈珠彈跳台</h1>
+    <p class="lead">用感測器偵測彈珠滾過的位置，觸發伺服馬達彈開擋板或翻板，做出縮小版的彈珠台機構。這是第一個真正結合「感測＋機構動作」的實體機台。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★★★☆</div>
+      <div><span>製作時間</span>約 5-6 小時（含機構）</div>
+      <div><span>核心零件</span>紅外線感測 + 伺服馬達</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <p>彈珠從斜面滾入木製或壓克力台面，滾過不同位置的紅外線感測點會得到不同分數，並觸發對應的伺服彈板把彈珠彈向另一個方向，增加隨機性與趣味。彈珠最終落入底部的計分洞。</p>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Uno</td><td>1</td><td>接腳較多，建議用 Uno 而非 Nano</td></tr>
+        <tr><td>紅外線反射式感測模組</td><td>3-5</td><td>偵測彈珠是否經過</td></tr>
+        <tr><td>SG90 伺服馬達</td><td>2-3</td><td>驅動彈板 / 翻板</td></tr>
+        <tr><td>七段顯示器（TM1637）</td><td>1</td><td>顯示分數</td></tr>
+        <tr><td>木板 / 壓克力板、斜面軌道</td><td>1 組</td><td>台面機構</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>紅外線感測 1 / 2 / 3</td><td>D2 / D3 / D4</td></tr>
+        <tr><td>伺服馬達 1 / 2</td><td>D9 / D10（PWM 腳）</td></tr>
+        <tr><td>TM1637 CLK / DIO</td><td>D6 / D7</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">供電提醒</span>
+      <p>伺服馬達啟動瞬間電流較大，若同時驅動兩顆以上，建議用獨立的 5V 電源供應伺服馬達，只共用「地線（GND）」與 Arduino 相連，避免電壓瞬降讓 Arduino 重開機。</p>
+    </div>
+
+    <h2>核心程式邏輯</h2>
+    <pre>#include &lt;Servo.h&gt;
+Servo flipper1, flipper2;
+int score = 0;
+
+void loop() {
+  if (digitalRead(2) == LOW) {   // 彈珠經過感測點 1
+    score += 10;
+    fireFlipper(flipper1);
+  }
+  if (digitalRead(3) == LOW) {
+    score += 20;
+    fireFlipper(flipper2);
+  }
+  updateScoreDisplay(score);
+}
+
+void fireFlipper(Servo &amp;s) {
+  s.write(120);   // 彈開
+  delay(150);
+  s.write(30);    // 收回原位
+}</pre>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入「連續命中加倍」機制：短時間內連續觸發感測器分數翻倍。</li>
+      <li>用電磁閥取代伺服馬達做出真正的彈射力道。</li>
+      <li>加入音效模組，命中不同感測點播放不同音效。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>這個機台的難點常常在機構而不是程式——彈板角度、彈珠軌道斜度需要多次試誤。可以把你想要的手感（彈得多遠、多快收回）描述給 AI，請它幫你估算 <code>delay()</code> 時間與伺服角度的組合作為起點，再實測調整。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="tilt-maze.html">← 上一個：M4 傾斜迷宮機</a>
+  <a href="claw-machine.html">下一個：M6 夾娃娃機 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考，馬達機構請留意手指安全</span>
+  </div>
+</footer>
+
+</body>
+</html>

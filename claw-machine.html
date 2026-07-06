@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 夾娃娃機｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M6 夾娃娃機</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M6 · 高階機台</span>
+    <h1>夾娃娃機</h1>
+    <p class="lead">三軸移動機構加上夾爪升降，是七個機台裡機構最複雜的一個。重點在於用步進馬達做出精準、可重複的座標移動，以及夾爪的開合時序控制。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★★★★</div>
+      <div><span>製作時間</span>約 8 小時以上（含機構組裝）</div>
+      <div><span>核心零件</span>步進馬達 x3 + 伺服馬達</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <p>玩家用搖桿控制夾爪在 X、Y 兩軸移動，按下按鍵後夾爪沿 Z 軸下降、閉合、再上升，並移動到出口上方放開。是否夾到娃娃取決於機構精度與夾爪閉合力道，保留一點「夾娃娃機式的隨機手感」。</p>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Mega 2560</td><td>1</td><td>接腳較多，建議用 Mega</td></tr>
+        <tr><td>28BYJ-48 步進馬達＋ULN2003 驅動板</td><td>3</td><td>分別驅動 X / Y / Z 軸</td></tr>
+        <tr><td>SG90 伺服馬達</td><td>1</td><td>控制夾爪開合</td></tr>
+        <tr><td>類比搖桿模組</td><td>1</td><td>控制 X / Y 移動</td></tr>
+        <tr><td>限位開關</td><td>2-4</td><td>各軸歸零用</td></tr>
+        <tr><td>鋁擠型 / 3D 列印機構件</td><td>1 組</td><td>移動平台與夾爪本體</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>X 軸步進驅動板 IN1-4</td><td>D2-D5</td></tr>
+        <tr><td>Y 軸步進驅動板 IN1-4</td><td>D6-D9</td></tr>
+        <tr><td>Z 軸步進驅動板 IN1-4</td><td>D10-D13</td></tr>
+        <tr><td>夾爪伺服馬達</td><td>D44（PWM）</td></tr>
+        <tr><td>搖桿 VRx / VRy</td><td>A0 / A1</td></tr>
+        <tr><td>限位開關</td><td>D22-D25</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">歸零很重要</span>
+      <p>步進馬達沒有絕對位置概念，開機時務必先讓每一軸移動到限位開關觸發為止，作為座標原點，之後才能用「走幾步」來精準定位，否則座標會隨著使用次數累積誤差。</p>
+    </div>
+
+    <h2>核心程式邏輯</h2>
+    <pre>#include &lt;Stepper.h&gt;
+#include &lt;Servo.h&gt;
+Stepper motorX(2048, 2, 3, 4, 5);
+Servo claw;
+
+enum State { IDLE, MOVING, LOWERING, GRABBING, RAISING, RETURNING };
+State state = IDLE;
+
+void loop() {
+  switch (state) {
+    case IDLE:
+      readJoystickAndMoveXY();
+      if (buttonPressed()) state = LOWERING;
+      break;
+    case LOWERING:
+      motorZLower();
+      state = GRABBING;
+      break;
+    case GRABBING:
+      claw.write(10); // 夾爪閉合
+      delay(500);
+      state = RAISING;
+      break;
+    case RAISING:
+      motorZRaise();
+      state = RETURNING;
+      break;
+    case RETURNING:
+      moveToExitAndRelease();
+      state = IDLE;
+      break;
+  }
+}</pre>
+    <p>用<strong>狀態機（state machine）</strong>取代一長串 if/else，是控制多步驟機構動作最重要的觀念——每個狀態只做一件事，切換條件清清楚楚。</p>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入限時挑戰：60 秒內夾到算成功，逾時自動歸位。</li>
+      <li>用超音波感測器偵測是否成功夾到娃娃，給予不同音效回饋。</li>
+      <li>把控制方式改成手機藍牙搖桿，體驗更像真的夾娃娃機店。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>狀態機的狀態轉換邏輯很適合請 AI 幫你畫成流程圖（先用文字描述每個狀態與切換條件，再請 AI 整理成清單或圖示），確認邏輯沒有漏掉的分支，再回頭寫程式碼會順很多。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="pinball.html">← 上一個：M5 彈珠彈跳台</a>
+  <a href="puzzle-escape.html">下一個：M7 解謎密室機關 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考，馬達機構請留意手指安全</span>
+  </div>
+</footer>
+
+</body>
+</html>

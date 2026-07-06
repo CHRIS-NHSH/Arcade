@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2 反應力搶答機｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M2 反應力搶答機</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M2 · 入門機台</span>
+    <h1>反應力搶答機</h1>
+    <p class="lead">多人搶答＋反應速度測試二合一。核心是學會用「中斷（interrupt）」精準判定誰先按下按鈕，做出不會有爭議的裁判機。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★☆☆☆☆</div>
+      <div><span>製作時間</span>約 1-2 小時</div>
+      <div><span>核心零件</span>按鈕 + 七段顯示器</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <p>模式一「搶答賽」：主持人按下開始鍵後，最先按下自己按鈕的玩家亮燈並鎖住其他人的按鈕。模式二「反應測試」：LED 隨機延遲後亮起，玩家看到燈亮立刻按鍵，機台顯示反應時間（毫秒）。</p>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Uno</td><td>1</td><td>&nbsp;</td></tr>
+        <tr><td>大按鈕開關</td><td>2-4</td><td>每位玩家一顆</td></tr>
+        <tr><td>4 位數七段顯示器（TM1637）</td><td>1</td><td>顯示反應時間或分數</td></tr>
+        <tr><td>LED + 220Ω電阻</td><td>依玩家數</td><td>標示搶到的玩家</td></tr>
+        <tr><td>蜂鳴器</td><td>1</td><td>按下瞬間音效回饋</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>玩家按鈕 1 / 2</td><td>D2（中斷腳） / D3（中斷腳）</td></tr>
+        <tr><td>玩家按鈕 3 / 4</td><td>D4 / D5</td></tr>
+        <tr><td>TM1637 CLK / DIO</td><td>D6 / D7</td></tr>
+        <tr><td>玩家指示 LED</td><td>D8–D11（各串 220Ω）</td></tr>
+        <tr><td>蜂鳴器</td><td>D12</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">為什麼用中斷</span>
+      <p>Uno 的 D2、D3 支援硬體中斷，按鈕一按下就會立刻打斷主程式去記錄時間，不會受到 <code>loop()</code> 裡其他運算延遲影響，判定最公平。其餘按鈕可用輪詢，誤差在毫秒等級通常可接受。</p>
+    </div>
+
+    <h2>核心程式邏輯</h2>
+    <pre>volatile bool locked = false;
+volatile int winner = -1;
+volatile unsigned long pressTime = 0;
+
+void onPlayer1Press() { buzz(0); }
+void onPlayer2Press() { buzz(1); }
+
+void buzz(int player) {
+  if (locked) return;      // 已經有人搶到，其餘按鍵忽略
+  locked = true;
+  winner = player;
+  pressTime = millis();
+}
+
+void setup() {
+  attachInterrupt(digitalPinToInterrupt(2), onPlayer1Press, FALLING);
+  attachInterrupt(digitalPinToInterrupt(3), onPlayer2Press, FALLING);
+}
+
+void loop() {
+  if (locked) {
+    lightUpWinner(winner);
+    showOnDisplay(winner + 1);
+    delay(2000);
+    resetRound();
+  }
+}</pre>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入「隨機延遲搶答」模式：太早按下算犯規。</li>
+      <li>用 EEPROM 記錄歷史最快反應時間，開機後顯示紀錄。</li>
+      <li>擴充到 6-8 人版本，改用矩陣掃描讀取按鈕，節省接腳。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>中斷函式（ISR）裡能不能寫什麼、不能寫什麼常常搞混，例如不能在裡面用 <code>delay()</code>。這是很適合丟給 AI 檢查程式碼的地方——把你的 ISR 貼給 AI，請它抓出「ISR 裡不該出現」的寫法。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="led-matrix-snake.html">← 上一個：M1 LED 矩陣貪食蛇</a>
+  <a href="joystick-dodge.html">下一個：M3 搖桿躲避機 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7 解謎密室機關｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M7 解謎密室機關</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M7 · 高階機台</span>
+    <h1>解謎密室機關</h1>
+    <p class="lead">把三種不同的輸入裝置串成一個小型密室逃脫：RFID 卡片解鎖、鍵盤密碼、燈光記憶序列。這台也是我們示範「如何用 AI 協作設計關卡與寫程式」的完整案例。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★★★☆</div>
+      <div><span>製作時間</span>約 5-7 小時</div>
+      <div><span>核心零件</span>RFID + 矩陣鍵盤 + 電磁鎖</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <ol class="steps">
+      <li><strong>關卡一・感應解鎖</strong>：玩家找到藏在房間裡的 RFID 卡片並感應，觸發第一道 LED 由紅轉綠。</li>
+      <li><strong>關卡二・密碼推理</strong>：牆上的提示需要玩家推理出 4 位數密碼，用矩陣鍵盤輸入。</li>
+      <li><strong>關卡三・燈光記憶</strong>：四顆 LED 依序閃爍一組序列，玩家要照相同順序按下對應按鈕（類似 Simon 遊戲），連續正確三輪才過關。</li>
+      <li><strong>通關</strong>：三關全部完成後，電磁鎖釋放，蜂鳴器播放通關音效。</li>
+    </ol>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Mega 2560</td><td>1</td><td>接腳需求多，建議用 Mega</td></tr>
+        <tr><td>RC522 RFID 模組＋卡片</td><td>1</td><td>SPI 介面</td></tr>
+        <tr><td>4x4 矩陣鍵盤</td><td>1</td><td>輸入密碼</td></tr>
+        <tr><td>LED（不同色）</td><td>4-6</td><td>燈光記憶序列與關卡狀態指示</td></tr>
+        <tr><td>按鈕</td><td>4</td><td>對應燈光記憶序列</td></tr>
+        <tr><td>電磁鎖或伺服馬達鎖扣</td><td>1</td><td>最終過關機構</td></tr>
+        <tr><td>蜂鳴器</td><td>1</td><td>音效回饋</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>RC522 SDA/SCK/MOSI/MISO/RST</td><td>D53/D52/D51/D50/D49</td></tr>
+        <tr><td>矩陣鍵盤 8 條線</td><td>D22-D29</td></tr>
+        <tr><td>記憶序列 LED x4</td><td>D30-D33</td></tr>
+        <tr><td>記憶序列按鈕 x4</td><td>D34-D37</td></tr>
+        <tr><td>電磁鎖（透過繼電器）</td><td>D8</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">電磁鎖注意</span>
+      <p>電磁鎖電流較大，務必透過繼電器模組驅動，不要直接接到 Arduino 數位腳，否則會燒毀輸出腳，嚴重時損壞整片板子。</p>
+    </div>
+
+    <h2>核心程式邏輯：用狀態機串接三道關卡</h2>
+    <pre>enum Stage { STAGE_RFID, STAGE_KEYPAD, STAGE_MEMORY, ESCAPED };
+Stage stage = STAGE_RFID;
+
+void loop() {
+  switch (stage) {
+    case STAGE_RFID:
+      if (validCardDetected()) { setLED(1, GREEN); stage = STAGE_KEYPAD; }
+      break;
+    case STAGE_KEYPAD:
+      if (checkKeypadCode("1937")) { setLED(2, GREEN); stage = STAGE_MEMORY; }
+      break;
+    case STAGE_MEMORY:
+      if (playAndCheckMemorySequence()) { setLED(3, GREEN); stage = ESCAPED; }
+      break;
+    case ESCAPED:
+      unlockDoor();
+      playWinSound();
+      break;
+  }
+}</pre>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入計時器與失敗次數限制，營造更緊張的密室氣氛。</li>
+      <li>用 SD 卡模組播放語音提示，取代單純的燈光與蜂鳴器。</li>
+      <li>把三關卡順序改成可設定，方便重複遊玩、更換謎題。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作示範</span>
+      <p>這台機器的謎題劇情、密碼提示、燈光序列設計，以及三道關卡的程式串接，我們用完整案例示範了如何借助 AI 協作完成——包含怎麼下提示詞讓 AI 幫你發想合理的謎題敘事，以及怎麼用 AI 抓出狀態機裡的邏輯漏洞。詳見 <a href="../ai-collaboration.html">AI 協作教學</a>。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="claw-machine.html">← 上一個：M6 夾娃娃機</a>
+  <a href="../ai-collaboration.html">下一個：AI 協作教學 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>
