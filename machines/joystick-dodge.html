@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 搖桿躲避機｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M3 搖桿躲避機</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M3 · 進階機台</span>
+    <h1>搖桿躲避機</h1>
+    <p class="lead">在 OLED 螢幕上操控一個小方塊，躲開不斷從畫面右側冒出、往左飛來的障礙物。這個專案的重點是「即時碰撞判定」與「難度隨時間遞增」的做法。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★★☆☆</div>
+      <div><span>製作時間</span>約 3-4 小時</div>
+      <div><span>核心零件</span>SSD1306 OLED + 搖桿</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <p>玩家角色固定在畫面左側，只能上下移動。障礙物以固定間隔從右側生成，往左等速移動。存活時間越長分數越高，且每存活 10 秒障礙物生成速度會加快一階。</p>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Uno / Nano</td><td>1</td><td>&nbsp;</td></tr>
+        <tr><td>SSD1306 0.96" OLED（I2C）</td><td>1</td><td>128x64 解析度</td></tr>
+        <tr><td>類比搖桿模組</td><td>1</td><td>只需 Y 軸</td></tr>
+        <tr><td>蜂鳴器</td><td>1</td><td>撞到障礙物時提示音</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>OLED SDA</td><td>A4</td></tr>
+        <tr><td>OLED SCL</td><td>A5</td></tr>
+        <tr><td>搖桿 VRy</td><td>A0</td></tr>
+        <tr><td>蜂鳴器</td><td>D9</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">函式庫</span>
+      <p>建議使用 <code>Adafruit_SSD1306</code> 搭配 <code>Adafruit_GFX</code>，繪圖與畫矩形/文字的 API 都很直覺。</p>
+    </div>
+
+    <h2>核心程式邏輯</h2>
+    <p>用 <code>millis()</code> 取代 <code>delay()</code> 來同時處理「畫面更新」與「障礙物生成」兩件不同頻率的事，是這個專案最關鍵的技巧。</p>
+    <pre>int playerY = 32;
+int obstacleX[5], obstacleY[5];
+unsigned long lastSpawn = 0;
+int spawnInterval = 1200; // 毫秒，會隨時間縮短
+
+void loop() {
+  playerY = map(analogRead(A0), 0, 1023, 0, 64 - PLAYER_H);
+
+  if (millis() - lastSpawn > spawnInterval) {
+    spawnObstacle();
+    lastSpawn = millis();
+    if (spawnInterval > 400) spawnInterval -= 20; // 難度遞增
+  }
+
+  moveObstacles();
+  if (checkCollision(playerY)) { gameOver(); return; }
+
+  drawFrame(playerY);
+}</pre>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入「無敵道具」：吃到後短暫可穿過障礙物。</li>
+      <li>障礙物形狀多樣化，並依難度調整出現機率。</li>
+      <li>加入最高分記錄，用 EEPROM 儲存。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>碰撞判定的數學（矩形是否重疊）常常一開始寫得太寬鬆或太嚴格，導致「明明沒撞到卻死了」。把你的 <code>checkCollision()</code> 函式與座標定義告訴 AI，請它畫出示意圖或用文字描述判斷邏輯，很快就能抓到問題。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="reaction-button.html">← 上一個：M2 反應力搶答機</a>
+  <a href="tilt-maze.html">下一個：M4 傾斜迷宮機 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>

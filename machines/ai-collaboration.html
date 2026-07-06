@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 協作教學｜Arduino Game Lab</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB <span class="free-badge">免費開放</span></div>
+    <div class="nav-links">
+      <a href="index.html#machines">機台教學</a>
+      <a href="ai-collaboration.html">AI 協作</a>
+      <a href="index.html#start">開始使用</a>
+    </div>
+    <a href="index.html#machines" class="nav-cta">開始動手做 →</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="index.html">首頁</a> / AI 協作教學</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// AI COLLABORATION</span>
+    <h1>跟 AI 一起做遊戲機台</h1>
+    <p class="lead">做一台完整的遊戲機台，其實是兩件不同的工作：想出好玩、合理的關卡設計，以及把它可靠地寫成程式。AI 在這兩件事上能幫上不同的忙。這頁用 <a href="machines/puzzle-escape.html">M7 解謎密室機關</a> 當作完整案例，示範怎麼跟 AI 分工合作。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="design-prompts">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// PART A</span>
+      <h2>用 AI 設計解謎關卡的邏輯與劇情</h2>
+      <p>AI 擅長的是「發散＋收斂」：先幫你想出比自己一個人多的謎題方向，再幫你檢查邏輯是否合理、難度是否公平。它不會知道你機台上實際裝了哪些感測器，這部分永遠要由你來告訴它。</p>
+    </div>
+
+    <h3>第一步：把限制條件講清楚</h3>
+    <p>下提示詞之前，先想好「你有什麼硬體」「玩家會經歷幾個階段」「希望的氣氛」。限制條件講得越具體，AI 生出來的謎題就越能直接落地，而不是天馬行空。</p>
+
+    <div class="prompt-card">
+      <span class="who">你可以這樣問 AI：</span>
+      我在做一台密室逃脫風格的 Arduino 機台，硬體有：RFID 讀卡機、4x4 矩陣鍵盤、4 顆不同顏色的 LED 和 4 顆按鈕。想要三道關卡，主題是「考古學家的地下室」，請幫我設計三道關卡的謎題內容與過關邏輯，並說明每道謎題要給玩家看到什麼提示。
+    </div>
+
+    <h3>第二步：把生成結果轉成「狀態＋過關條件」表格</h3>
+    <p>謎題劇情很容易寫得很發散，這時候可以再請 AI 把故事收斂成工程師看得懂的表格，這張表就是之後寫程式時的規格書。</p>
+
+    <div class="prompt-card">
+      <span class="who">追問一句：</span>
+      把剛剛三道關卡整理成表格，欄位是「關卡名稱、玩家要做的動作、過關判定條件、過關後的回饋（燈光/聲音）」。
+    </div>
+
+    <table>
+      <thead><tr><th>關卡</th><th>玩家動作</th><th>過關條件</th><th>回饋</th></tr></thead>
+      <tbody>
+        <tr><td>關卡一・感應解鎖</td><td>把刻有徽章的 RFID 卡片感應到讀卡機</td><td>讀到指定卡片 UID</td><td>LED1 由紅轉綠</td></tr>
+        <tr><td>關卡二・密碼推理</td><td>從房間內的道具推理出 4 位數密碼並輸入</td><td>鍵盤輸入等於設定密碼</td><td>LED2 由紅轉綠＋短嗶聲</td></tr>
+        <tr><td>關卡三・燈光記憶</td><td>複製機台顯示的燈光閃爍順序</td><td>連續 3 輪輸入順序正確</td><td>LED3 由紅轉綠＋通關音效</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <span class="note-label">為什麼要收斂成表格</span>
+      <p>劇情可以很有畫面，但寫程式需要的是明確的條件判斷。這張表格之後幾乎可以直接對應到程式裡的狀態機（就是 <a href="machines/puzzle-escape.html">M7 教學頁</a>裡的 <code>enum Stage</code>），設計到實作之間不會斷層。</p>
+    </div>
+
+    <h3>檢查關卡是否公平：請 AI 當「魔鬼代言人」</h3>
+    <p>設計者自己往往覺得謎題很合理，但玩家不一定看得出提示。可以請 AI 站在完全沒看過設計文件的玩家角度重新檢視。</p>
+    <div class="prompt-card">
+      <span class="who">你可以這樣問 AI：</span>
+      假裝你是第一次玩這台機器、完全不知道答案的玩家，只根據我提供的提示內容，你覺得密碼 1937 合理推理得出來嗎？如果太難或太簡單，請給我調整建議。
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// PART B</span>
+      <h2>用 AI 協作寫程式與除錯</h2>
+      <p>有了關卡表格之後，換成工程實作的階段。這裡 AI 比較適合做的事情是：把規格轉成程式骨架、檢查邊界條件、以及在你卡關時幫忙定位 bug。</p>
+    </div>
+
+    <h3>從規格表生成程式骨架</h3>
+    <div class="prompt-card">
+      <span class="who">你可以這樣問 AI：</span>
+      根據這張關卡表格，幫我用 Arduino C++ 寫一個狀態機骨架（enum + switch），每個關卡先留空函式讓我自己填實作，函式命名要能對應到表格裡的關卡名稱。
+    </div>
+    <p>這樣拿到的程式碼會跟 <a href="machines/puzzle-escape.html">M7 教學頁</a>裡展示的狀態機結構一致——AI 生成的是「骨架」，實際的 <code>checkKeypadCode()</code>、<code>playAndCheckMemorySequence()</code> 內容仍建議自己動手寫，才會真正理解每個感測器怎麼讀。</p>
+
+    <h3>除錯實例：燈光記憶序列「永遠對不起來」</h3>
+    <p>假設你寫完關卡三，測試時發現不管怎麼按都判定失敗。與其自己盯著程式碼發呆，可以把相關片段和現象一起丟給 AI：</p>
+
+    <div class="prompt-card">
+      <span class="who">你可以這樣描述問題：</span>
+      這段程式在比對玩家輸入序列跟正確序列時，明明我按的順序跟畫面提示一樣，卻一直判定錯誤。以下是我的程式碼和變數宣告，幫我找出可能的原因。
+      <br><br>
+      <code>int sequence[4]; int playerInput[4]; int inputIndex = 0;</code><br>
+      <code>if (playerInput == sequence) { stage = ESCAPED; }</code>
+    </div>
+
+    <div class="note">
+      <span class="note-label">這個例子的重點</span>
+      <p>問題出在 <code>playerInput == sequence</code>——在 C++ 裡這樣寫是在比較兩個陣列的「記憶體位址」，不是比較內容，永遠不會相等。這正是 AI 很擅長抓出來的錯誤類型：語法合法、編譯不會報錯，但邏輯是錯的。AI 會建議改成逐一比對每個元素，或使用 <code>memcmp()</code>。</p>
+    </div>
+
+    <h3>請 AI 幫你設計測試情境</h3>
+    <p>硬體專案很難每種狀況都手動測試（例如：卡片感應失敗、密碼按錯又重按、燈光序列中途放棄），可以請 AI 幫你條列出應該測試的邊界情況清單，再逐一動手驗證。</p>
+    <div class="prompt-card">
+      <span class="who">你可以這樣問 AI：</span>
+      幫我列出這台三關卡密室機關，測試時應該涵蓋哪些邊界情況（例如錯誤輸入、中途重來、感測器沒讀到訊號等），我要照著清單一項一項實測。
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// FULL WORKFLOW</span>
+      <h2>完整流程：從發想到完成一台機台</h2>
+      <p>以 M7 解謎密室機關為例，整個流程大致是這樣分工的：</p>
+    </div>
+    <ol class="steps">
+      <li><strong>列出硬體限制</strong>：先確定手邊有哪些模組，再開始跟 AI 討論，避免設計出做不到的謎題。</li>
+      <li><strong>AI 協助發想關卡劇情</strong>：用 Part A 的提示詞，得到幾個關卡方向，自己挑一個最喜歡的調整。</li>
+      <li><strong>收斂成規格表格</strong>：把劇情轉成「動作、條件、回饋」表格，作為之後寫程式的依據。</li>
+      <li><strong>AI 產生程式骨架</strong>：用 Part B 的提示詞取得狀態機骨架，自己實作每個關卡的細節函式。</li>
+      <li><strong>接線並實測</strong>：對照教學頁的接線表，先在麵包板上驗證每個模組能單獨運作。</li>
+      <li><strong>整合除錯</strong>：把三關卡串起來測試，卡關時用 Part B 的除錯方法向 AI 描述現象、附上程式碼片段。</li>
+      <li><strong>公平性檢查</strong>：請 AI 扮演玩家角度重新檢視謎題難度，微調提示文字。</li>
+      <li><strong>組裝外殼機構</strong>：程式與電路都穩定後，才動手做外殼與最終機構安裝。</li>
+    </ol>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// GOOD PRACTICE</span>
+      <h2>跟 AI 協作時的幾個小技巧</h2>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <span class="ref">技巧 1</span>
+        <h3>先講限制，再要創意</h3>
+        <p>硬體型號、接腳數量、預算、時間，越早講清楚，AI 給的方案越不會落空。</p>
+      </div>
+      <div class="card">
+        <span class="ref">技巧 2</span>
+        <h3>把劇情收斂成表格再寫程式</h3>
+        <p>敘事性內容直接拿去寫程式容易卡關，先轉成條件表格會讓實作順很多。</p>
+      </div>
+      <div class="card">
+        <span class="ref">技巧 3</span>
+        <h3>描述現象，而不只是丟錯誤訊息</h3>
+        <p>「按了沒反應」比單純貼一段錯誤代碼更有用，讓 AI 能一起推理可能原因。</p>
+      </div>
+      <div class="card">
+        <span class="ref">技巧 4</span>
+        <h3>AI 生成的程式碼一定要動手實測</h3>
+        <p>尤其是控制馬達、電磁鎖等有機構動作的部分，先確認安全再通電測試。</p>
+      </div>
+      <div class="card">
+        <span class="ref">技巧 5</span>
+        <h3>迭代優於一次到位</h3>
+        <p>先求能動、再求穩定、最後求好玩，每個階段都可以重新請 AI 檢視。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="machines/puzzle-escape.html">← 回到 M7 解謎密室機關教學</a>
+  <a href="index.html">回首頁 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>

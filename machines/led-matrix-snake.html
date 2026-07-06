@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M1 LED 矩陣貪食蛇機台｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB <span class="free-badge">免費開放</span></div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+    <a href="../index.html#machines" class="nav-cta">開始動手做 →</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M1 LED 矩陣貪食蛇</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M1 · 入門機台</span>
+    <h1>LED 矩陣貪食蛇機台</h1>
+    <p class="lead">用一片 8x8 LED 矩陣顯示畫面、一支類比搖桿控制方向，做出最經典的貪食蛇遊戲。這是認識「矩陣掃描顯示」與「遊戲迴圈」概念最好的第一個專案。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★☆☆☆</div>
+      <div><span>製作時間</span>約 2-3 小時</div>
+      <div><span>核心零件</span>MAX7219 + 8x8 LED 矩陣</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <p>蛇從畫面中央開始，玩家用搖桿控制上下左右移動，每吃到一個隨機出現的「食物」LED 點，蛇身就增長一格。蛇頭碰到自己的身體或畫面邊界即遊戲結束，並在矩陣上閃爍顯示分數。</p>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Uno / Nano</td><td>1</td><td>相容板皆可</td></tr>
+        <tr><td>MAX7219 8x8 LED 矩陣模組</td><td>1</td><td>已內建驅動 IC，接線少</td></tr>
+        <tr><td>類比搖桿模組 (KY-023)</td><td>1</td><td>含 X/Y 電位器與按鍵</td></tr>
+        <tr><td>蜂鳴器（選配）</td><td>1</td><td>吃到食物時發出音效</td></tr>
+        <tr><td>杜邦線、麵包板</td><td>若干</td><td>&nbsp;</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>MAX7219 DIN</td><td>D11</td></tr>
+        <tr><td>MAX7219 CLK</td><td>D13</td></tr>
+        <tr><td>MAX7219 CS</td><td>D10</td></tr>
+        <tr><td>搖桿 VRx</td><td>A0</td></tr>
+        <tr><td>搖桿 VRy</td><td>A1</td></tr>
+        <tr><td>搖桿 SW（按鍵）</td><td>D2</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">接線提醒</span>
+      <p>MAX7219 模組吃 5V，若同時接了蜂鳴器建議另外供電，避免矩陣全亮時電流不足造成 Arduino 重開機。</p>
+    </div>
+
+    <h2>核心程式邏輯</h2>
+    <p>安裝 <code>LedControl</code> 函式庫後，遊戲迴圈的核心概念是：讀搖桿方向 → 更新蛇的座標陣列 → 檢查碰撞 → 重繪矩陣。</p>
+    <pre>#include &lt;LedControl.h&gt;
+LedControl lc = LedControl(11, 13, 10, 1);
+
+int snakeX[64], snakeY[64], length = 3;
+int dirX = 1, dirY = 0;
+
+void loop() {
+  readJoystickDirection(); // 讀 A0 / A1，更新 dirX, dirY
+
+  // 蛇身座標整體往前移動一格
+  for (int i = length; i > 0; i--) {
+    snakeX[i] = snakeX[i - 1];
+    snakeY[i] = snakeY[i - 1];
+  }
+  snakeX[0] += dirX;
+  snakeY[0] += dirY;
+
+  if (hitWallOrSelf()) { showGameOver(); return; }
+  if (snakeX[0] == foodX &amp;&amp; snakeY[0] == foodY) { length++; spawnFood(); }
+
+  redrawMatrix();
+  delay(200); // 控制遊戲速度
+}</pre>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入分數顯示：遊戲結束後用矩陣閃爍次數表示分數。</li>
+      <li>加入難度遞增：蛇越長，<code>delay()</code> 越短，速度越快。</li>
+      <li>換成雙色 LED 矩陣，讓蛇頭與蛇身用不同顏色顯示。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>這類「座標陣列＋碰撞判定」的邏輯很適合請 AI 幫你檢查邊界條件（例如蛇頭剛好等於陣列長度時的錯誤），或是請它幫你把遊戲速度改成用 <code>millis()</code> 非阻塞計時，取代 <code>delay()</code>。詳細做法可參考 <a href="../ai-collaboration.html">AI 協作教學</a>。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="../index.html#machines">← 回機台總覽</a>
+  <a href="reaction-button.html">下一個：M2 反應力搶答機 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>

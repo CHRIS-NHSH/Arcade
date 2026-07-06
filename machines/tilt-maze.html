@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 傾斜迷宮機｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M4 傾斜迷宮機</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M4 · 進階機台</span>
+    <h1>傾斜迷宮機</h1>
+    <p class="lead">用陀螺儀／加速度計偵測機台傾斜角度，控制畫面上的球滾出迷宮。這個專案會讓你第一次體會到「感測器訊號雜訊」與濾波處理的重要性。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★★☆☆</div>
+      <div><span>製作時間</span>約 3-4 小時</div>
+      <div><span>核心零件</span>MPU6050 + OLED</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>遊戲玩法</h2>
+    <p>玩家實際傾斜整個機台外殼，畫面上的球會依傾斜方向加速滾動。目標是在時間限制內把球滾到終點，途中若掉進畫在迷宮裡的陷阱格就必須重來。</p>
+
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>Arduino Uno / Nano</td><td>1</td><td>&nbsp;</td></tr>
+        <tr><td>MPU6050 六軸感測模組</td><td>1</td><td>I2C 介面</td></tr>
+        <tr><td>SSD1306 OLED</td><td>1</td><td>顯示迷宮與球</td></tr>
+        <tr><td>蜂鳴器</td><td>1</td><td>碰到陷阱 / 到達終點提示</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>MPU6050 SDA / OLED SDA</td><td>A4（共用同一條 I2C 匯流排）</td></tr>
+        <tr><td>MPU6050 SCL / OLED SCL</td><td>A5（共用同一條 I2C 匯流排）</td></tr>
+        <tr><td>蜂鳴器</td><td>D9</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">I2C 位址提醒</span>
+      <p>MPU6050 與 OLED 都是 I2C 裝置，各自有固定位址（通常是 0x68 與 0x3C），可以共用 A4/A5 兩條線，寫程式時用各自的位址溝通即可，不需要額外接線。</p>
+    </div>
+
+    <h2>核心程式邏輯</h2>
+    <p>陀螺儀讀值會有雜訊，直接拿來當速度使用球會抖動，實務上會用「低通濾波」讓數值平滑：</p>
+    <pre>float velX = 0, velY = 0;
+float ballX = 64, ballY = 32;
+
+void loop() {
+  float rawAx = readAccelX(); // -1.0 ~ 1.0，代表傾斜方向與程度
+  float rawAy = readAccelY();
+
+  // 低通濾波：新舊數值加權平均，減少抖動
+  velX = velX * 0.8 + rawAx * 0.2;
+  velY = velY * 0.8 + rawAy * 0.2;
+
+  ballX += velX * 2;
+  ballY += velY * 2;
+
+  if (hitWall(ballX, ballY)) { velX = 0; velY = 0; } // 撞牆停止
+  if (hitTrap(ballX, ballY)) resetBall();
+  if (reachedGoal(ballX, ballY)) showWin();
+
+  drawMaze(ballX, ballY);
+}</pre>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>設計多張迷宮地圖，用陣列儲存牆壁座標，過關後自動切換。</li>
+      <li>加入計時挑戰模式，顯示破關所需秒數。</li>
+      <li>把 OLED 換成實體滾珠迷宮外殼，Arduino 只負責計時與過關判定。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>濾波係數（例如上面的 0.8 / 0.2）要調到手感剛好，很花時間試誤。可以請 AI 解釋低通濾波公式背後的原理，並依你想要的「靈敏度 vs 穩定度」描述，幫你估算合理的起始參數再實測微調。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="joystick-dodge.html">← 上一個：M3 搖桿躲避機</a>
+  <a href="pinball.html">下一個：M5 彈珠彈跳台 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>
