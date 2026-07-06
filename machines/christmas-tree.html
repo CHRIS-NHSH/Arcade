@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 聖誕樹互動遊戲機｜Arduino Game Lab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB <span class="free-badge">免費開放</span></div>
+    <div class="nav-links">
+      <a href="../index.html#machines">機台教學</a>
+      <a href="../components.html">元件百科</a>
+      <a href="../ai-collaboration.html">AI 協作</a>
+      <a href="../index.html#start">開始使用</a>
+    </div>
+    <a href="../index.html#machines" class="nav-cta">開始動手做 →</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M8 聖誕樹互動遊戲機</div>
+
+<section class="hero" style="padding-top:36px;">
+  <div class="wrap">
+    <span class="eyebrow">// M8 · 高階機台</span>
+    <h1>聖誕樹互動遊戲機</h1>
+    <p class="lead">把一整棵聖誕樹外殼變成雙人對戰機台：17 顆可定址 LED 當裝飾燈，6 顆按鈕分成左右兩側，同一套硬體可以切換玩 5 款完全不同的小遊戲。這台的重點是用<strong>狀態機</strong>管理「選單＋5款遊戲」這種多模式切換的架構。</p>
+    <div class="meta-row">
+      <div><span>難度</span>★★★★☆</div>
+      <div><span>製作時間</span>約 6-8 小時（含外殼與燈珠黏貼）</div>
+      <div><span>核心零件</span>17 顆 WS2812 可定址 LED + 6 顆按鈕</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>整體設計：一棵樹，五款遊戲</h2>
+    <p>樹尖是第 0 號 LED，稱為「星星」，負責顯示選單、題目與勝負訊號；樹身其餘 16 顆 LED 依左右分成 P1、P2 各 8 顆。底座控制台每位玩家各有紅、綠、藍 3 顆按鈕。開機後樹身跑彩虹燈效，接著進入選單，用 P1 的按鈕選遊戲、確認後進入對應關卡，玩家對戰到其中一方燈全亮就分出勝負，結束後自動回到選單。</p>
+
+    <h3>選單操作</h3>
+    <table>
+      <thead><tr><th>按鈕</th><th>選單模式功能</th></tr></thead>
+      <tbody>
+        <tr><td>P1 紅色鈕</td><td>切換到上一個遊戲（星星顯示該遊戲的代表色）</td></tr>
+        <tr><td>P1 綠色鈕</td><td>切換到下一個遊戲</td></tr>
+        <tr><td>P1 藍色鈕</td><td>確認選擇，星星顏色「流滿」整棵樹後進入遊戲</td></tr>
+      </tbody>
+    </table>
+
+    <h3>五款遊戲一覽</h3>
+    <table>
+      <thead><tr><th>關卡</th><th>名稱</th><th>玩法一句話</th></tr></thead>
+      <tbody>
+        <tr><td>紅關</td><td>搶救聖誕裝飾</td><td>星星隨機亮紅或綠，看到對應顏色搶按同色按鈕，先馳得點</td></tr>
+        <tr><td>橙關</td><td>爬煙囪拔河</td><td>瘋狂連打任一按鈕，自己那側的燈從樹根往上爬，先爬到頂端獲勝</td></tr>
+        <tr><td>黃關</td><td>聖誕記憶</td><td>星星閃出一段紅／藍序列，燈熄滅後照原順序按對應按鈕，序列會越來越長</td></tr>
+        <tr><td>綠關</td><td>點亮星星</td><td>跑馬燈忽快忽慢地跑向樹頂，輪流搶在燈剛好跑到星星的瞬間按下按鈕</td></tr>
+        <tr><td>藍關</td><td>聖誕色彩大師</td><td>星星顯示目標顏色，同時按下對應的顏色組合（如紅+藍＝紫）配出正確混色</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>所需材料</h2>
+    <table>
+      <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../components.html#arduino-uno-r4">Arduino Uno</a></td><td>1</td><td>相容板皆可</td></tr>
+        <tr><td><a href="../components.html#ws2812d">WS2812 可定址 LED</a></td><td>17</td><td>1 顆當樹頂星星，16 顆裝飾在樹身</td></tr>
+        <tr><td><a href="../components.html#btn-24mm">按鈕開關</a>（紅／綠／藍）</td><td>6</td><td>雙人各 3 色，24mm 或 6x6mm 皆可</td></tr>
+        <tr><td><a href="../components.html#speaker">蜂鳴器</a>（選配）</td><td>1</td><td>操作與勝負音效回饋</td></tr>
+        <tr><td><a href="../components.html#resistor-100">限流電阻</a></td><td>1</td><td>建議加在 LED 訊號線上，約 300-500Ω</td></tr>
+        <tr><td><a href="../components.html#cap-104">陶瓷電容 104</a></td><td>1</td><td>建議並聯在 LED 電源腳位，濾除雜訊</td></tr>
+        <tr><td><a href="../components.html#dupont-wire">杜邦線</a>、<a href="../components.html#breadboard">麵包板</a></td><td>若干</td><td>&nbsp;</td></tr>
+        <tr><td><a href="../components.html#enclosure">雷切外殼木板</a></td><td>1</td><td>切割組裝成聖誕樹造型外殼</td></tr>
+      </tbody>
+    </table>
+
+    <h2>接線重點</h2>
+    <table>
+      <thead><tr><th>模組接腳</th><th>Arduino 接腳</th></tr></thead>
+      <tbody>
+        <tr><td>LED 燈條 Data In</td><td>D6</td></tr>
+        <tr><td>蜂鳴器</td><td>D12</td></tr>
+        <tr><td>P1 紅／綠／藍按鈕</td><td>D2 / D3 / D4</td></tr>
+        <tr><td>P2 紅／綠／藍按鈕</td><td>D8 / D9 / D10</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      <span class="note-label">接線提醒</span>
+      <p>程式用 <code>INPUT_PULLUP</code> 讀取按鈕，接線時按鈕一端接對應腳位、另一端直接接 GND 即可，不需要外接下拉電阻。17 顆 LED 全部全白全亮時瞬間電流不小，建議用外部 5V 電源供電，只與 Arduino 共用 GND。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <h2>核心程式邏輯：用狀態機管理「選單＋5款遊戲」</h2>
+    <p>整台機器只有一個 <code>enum GameState</code>，<code>loop()</code> 裡用 <code>switch</code> 決定現在該執行選單邏輯還是某一款遊戲的邏輯，遊戲之間切換只是改變這個狀態值，硬體讀取與燈光繪製的寫法可以在 5 款遊戲之間重複利用。</p>
+    <pre>enum GameState {
+  MENU,
+  GAME_1_RED, GAME_2_ORANGE, GAME_3_YELLOW, GAME_4_GREEN, GAME_5_BLUE
+};
+GameState currentState = MENU;
+
+void loop() {
+  P1_R.update(); P1_G.update(); P1_B.update();
+  P2_R.update(); P2_G.update(); P2_B.update();
+
+  switch (currentState) {
+    case MENU:          runMenu(); break;
+    case GAME_1_RED:    runGame1_WhackAMole(); break;
+    case GAME_2_ORANGE: runGame2_TugOfWar(); break;
+    case GAME_3_YELLOW: runGame3_Memory(); break;
+    case GAME_4_GREEN:  runGame4_Timing(); break;
+    case GAME_5_BLUE:   runGame5_ColorMix(); break;
+  }
+}</pre>
+    <p>紅關「搶救聖誕裝飾」是最單純的一款，示範了「隨機出題 → 監聽按鍵 → 判定搶答 → 更新計分燈」的基本流程，其餘 4 款都是同一套流程的變化版：</p>
+    <pre>void runGame1_WhackAMole() {
+  if (gameInit) {                 // 每次進入遊戲先重置狀態
+    p1Score = 0; p2Score = 0;
+    strip.clear();
+    gameInit = false;
+    g1_waiting = true;
+    g1_waitStart = millis();
+  }
+
+  if (g1_waiting) {
+    if (millis() - g1_waitStart > random(1000, 3000)) {  // 隨機延遲出題
+      g1_targetColor = random(2);
+      strip.setPixelColor(STAR_LED, g1_targetColor == 0 ? COL_RED : COL_GREEN);
+      strip.show();
+      g1_waiting = false;
+    }
+  } else {
+    bool p1_hit = (g1_targetColor == 0 && P1_R.pressed()) || (g1_targetColor == 1 && P1_G.pressed());
+    bool p2_hit = (g1_targetColor == 0 && P2_R.pressed()) || (g1_targetColor == 1 && P2_G.pressed());
+    if (p1_hit || p2_hit) {
+      if (p1_hit) { p1Score++; winAnim(1); } else { p2Score++; winAnim(2); }
+      updateScoreboard();
+      if (p1Score >= LEDS_PER_SIDE || p2Score >= LEDS_PER_SIDE) gameOver(p1Score > p2Score ? 1 : 2);
+      else { g1_waiting = true; g1_waitStart = millis(); }
+    }
+  }
+}</pre>
+    <p>完整包含全部 5 款遊戲、選單邏輯與所有輔助函式的程式，可以直接下載燒錄：</p>
+    <p><a href="christmas-tree.ino">📄 下載完整程式 christmas-tree.ino</a>（需先安裝 <code>Adafruit_NeoPixel</code> 與 <code>Bounce2</code> 函式庫）</p>
+
+    <h2>延伸挑戰</h2>
+    <ul class="plain">
+      <li>加入單人模式，讓其中一側改成電腦自動出招，方便一個人也能練習。</li>
+      <li>用 <a href="../components.html#dfplayer">DFPlayer Mini</a> 播放每款遊戲各自的背景音樂與語音提示，取代單純蜂鳴器。</li>
+      <li>用 EEPROM 記錄 5 款遊戲各自的歷代最高分或最快紀錄。</li>
+      <li>樹身改用 <a href="../components.html#ws2812b-strip">WS2812B 燈條</a>纏繞，燈數更多、氣氛效果更強。</li>
+    </ul>
+
+    <div class="note">
+      <span class="note-label">AI 協作提示</span>
+      <p>這台機器最值得跟 AI 討論的地方，就是「選單 + 5 款遊戲」這種多模式狀態機的架構本身：把 5 款遊戲的規則、勝負條件先整理成表格（可以參考 <a href="../ai-collaboration.html">AI 協作教學</a>的做法），再請 AI 幫你檢查狀態切換有沒有漏掉的分支，之後要再加入第 6 款遊戲時也會比較容易維護。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="puzzle-escape.html">← 上一個：M7 解謎密室機關</a>
+  <a href="../ai-collaboration.html">下一個：AI 協作教學 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+</body>
+</html>

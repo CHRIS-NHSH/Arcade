@@ -10,12 +10,14 @@
 
 <header class="site-header">
   <nav class="nav">
-    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB</div>
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB <span class="free-badge">免費開放</span></div>
     <div class="nav-links">
       <a href="../index.html#machines">機台教學</a>
+      <a href="../components.html">元件百科</a>
       <a href="../ai-collaboration.html">AI 協作</a>
       <a href="../index.html#start">開始使用</a>
     </div>
+    <a href="../index.html#machines" class="nav-cta">開始動手做 →</a>
   </nav>
 </header>
 <div class="breadcrumb"><a href="../index.html">首頁</a> / <a href="../index.html#machines">機台教學</a> / M7 解謎密室機關</div>
@@ -49,13 +51,13 @@
     <table>
       <thead><tr><th>零件</th><th>數量</th><th>備註</th></tr></thead>
       <tbody>
-        <tr><td>Arduino Mega 2560</td><td>1</td><td>接腳需求多，建議用 Mega</td></tr>
-        <tr><td>RC522 RFID 模組＋卡片</td><td>1</td><td>SPI 介面</td></tr>
+        <tr><td><a href="../components.html#arduino-uno-r4">Arduino Mega 2560</a></td><td>1</td><td>接腳需求多，建議用 Mega</td></tr>
+        <tr><td><a href="../components.html#rfid-rc522">RC522 RFID 模組＋卡片</a></td><td>1</td><td>SPI 介面</td></tr>
         <tr><td>4x4 矩陣鍵盤</td><td>1</td><td>輸入密碼</td></tr>
         <tr><td>LED（不同色）</td><td>4-6</td><td>燈光記憶序列與關卡狀態指示</td></tr>
         <tr><td>按鈕</td><td>4</td><td>對應燈光記憶序列</td></tr>
-        <tr><td>電磁鎖或伺服馬達鎖扣</td><td>1</td><td>最終過關機構</td></tr>
-        <tr><td>蜂鳴器</td><td>1</td><td>音效回饋</td></tr>
+        <tr><td><a href="../components.html#solenoid">電磁鎖或伺服馬達鎖扣</a></td><td>1</td><td>最終過關機構</td></tr>
+        <tr><td><a href="../components.html#speaker">蜂鳴器</a></td><td>1</td><td>音效回饋</td></tr>
       </tbody>
     </table>
 
@@ -72,7 +74,7 @@
     </table>
     <div class="note">
       <span class="note-label">電磁鎖注意</span>
-      <p>電磁鎖電流較大，務必透過繼電器模組驅動，不要直接接到 Arduino 數位腳，否則會燒毀輸出腳，嚴重時損壞整片板子。</p>
+      <p>電磁鎖電流較大，務必透過<a href="../components.html#relay">繼電器模組</a>驅動，不要直接接到 Arduino 數位腳，否則會燒毀輸出腳，嚴重時損壞整片板子。</p>
     </div>
 
     <h2>核心程式邏輯：用狀態機串接三道關卡</h2>
@@ -114,7 +116,7 @@ void loop() {
 <hr class="divider">
 <div class="wrap page-nav">
   <a href="claw-machine.html">← 上一個：M6 夾娃娃機</a>
-  <a href="../ai-collaboration.html">下一個：AI 協作教學 →</a>
+  <a href="christmas-tree.html">下一個：M8 聖誕樹互動遊戲機 →</a>
 </div>
 
 <footer>
