@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>元件百科｜Arduino Game Lab</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB <span class="free-badge">免費開放</span></div>
+    <div class="nav-links">
+      <a href="index.html#machines">機台教學</a>
+      <a href="components.html">元件百科</a>
+      <a href="ai-collaboration.html">AI 協作</a>
+      <a href="index.html#start">開始使用</a>
+    </div>
+    <a href="index.html#machines" class="nav-cta">開始動手做 →</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="index.html">首頁</a> / 元件百科</div>
+
+<section class="hero" style="padding-top:36px; padding-bottom:24px;">
+  <div class="wrap">
+    <span class="eyebrow">// COMPONENT LIBRARY</span>
+    <h1>元件百科</h1>
+    <p class="lead">收錄 BOM 表裡常用的電子元件，分成七大類。每個元件都用兩種角度介紹：<strong>它是怎麼運作的</strong>，以及<strong>哪些機台實際用到它、還能怎麼延伸應用</strong>。看完材料表不知道某個零件在幹嘛，就回來這頁查一下。</p>
+    <div class="quicknav">
+      <a href="#cat-1">1 · 主控、系統</a>
+      <a href="#cat-2">2 · 玩家輸入</a>
+      <a href="#cat-3">3 · 接線、被動元件</a>
+      <a href="#cat-4">4 · 機械、動力與特效</a>
+      <a href="#cat-5">5 · 顯示、視覺與音效</a>
+      <a href="#cat-6">6 · 體感與環境感知</a>
+      <a href="#cat-7">7 · 結構、造型</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-1">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>1 · 主控、系統</h2>
+      <span class="cat-count">1 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">整個機台的大腦，負責讀輸入、跑邏輯、控制輸出。</p>
+    <div class="card-grid">
+      <div class="card" id="arduino-uno-r4">
+        <span class="ref">含 Type-C 傳輸線</span>
+        <h3>Arduino Uno R4 WiFi</h3>
+        <p><strong>原理：</strong>系統核心控制器，負責讀取所有輸入訊號、執行遊戲邏輯、驅動輸出裝置。R4 版本比舊款多了 Wi-Fi，之後想做連網計分板也用得到。</p>
+        <p><strong>使用要點：</strong>先確認電腦安裝了正確的驅動程式，燒錄前在 IDE 選對「開發板」與「連接埠」。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/led-matrix-snake.html">M1 · LED矩陣貪食蛇 · 目前使用</a>
+          <a class="tag tag-used" href="machines/reaction-button.html">M2 · 反應力搶答機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/joystick-dodge.html">M3 · 搖桿躲避機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/tilt-maze.html">M4 · 傾斜迷宮機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/pinball.html">M5 · 彈珠彈跳台 · 目前使用</a>
+          <a class="tag tag-used" href="machines/claw-machine.html">M6 · 夾娃娃機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/puzzle-escape.html">M7 · 解謎密室機關 · 目前使用</a>
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-2">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>2 · 玩家輸入</h2>
+      <span class="cat-count">9 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">所有讓玩家「動手操作」的元件，是機台與人互動的第一線。</p>
+    <div class="card-grid">
+      <div class="card" id="btn-24mm">
+        <span class="ref">紅、綠、藍各 2 個</span>
+        <h3>24mm 遊戲按鈕</h3>
+        <p><strong>原理：</strong>內部是機械開關，按下時兩端接點導通，Arduino 讀到的是高低電位變化。</p>
+        <p><strong>使用要點：</strong>接線時搭配下拉電阻，避免按鈕沒按時腳位處於「浮接」、讀值不穩定。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/reaction-button.html">M2 · 反應力搶答機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="tactile-switch">
+        <span class="ref">多種高度可選</span>
+        <h3>6x6mm 輕觸開關</h3>
+        <p><strong>原理：</strong>原理跟大型按鈕一樣，體積小，適合直接焊在電路板或麵包板上做原型測試。</p>
+        <p><strong>使用要點：</strong>腳位常常是對角互通，焊接前先用電表量一次，避免接錯。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可替換 M2 的大按鈕，做成更精簡的桌上型版本</span>
+        </div>
+      </div>
+      <div class="card" id="rotary-encoder">
+        <span class="ref">KY-040 模組</span>
+        <h3>旋轉編碼器</h3>
+        <p><strong>原理：</strong>旋轉時兩個訊號腳位交錯輸出高低電位，比較兩者先後順序就能判斷轉動方向與圈數，同時內建按壓開關。</p>
+        <p><strong>使用要點：</strong>讀取時建議加入簡單的防彈跳處理，避免手部抖動被誤判成多次輸入。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M6 夾娃娃機，做出更精準的手動微調控制</span>
+        </div>
+      </div>
+      <div class="card" id="btn-60mm">
+        <span class="ref">白色</span>
+        <h3>60mm 平面圓形按鍵</h3>
+        <p><strong>原理：</strong>與 24mm 按鈕相同的機械開關原理，按壓面積更大，適合需要用力拍打的遊戲。</p>
+        <p><strong>使用要點：</strong>按鈕面積大，安裝時注意固定座是否留有足夠鎖點。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可替換 M2 搶答機，做成拍打式大按鈕版本</span>
+        </div>
+      </div>
+      <div class="card" id="rfid-rc522">
+        <span class="ref">RC522, 13.56MHz</span>
+        <h3>RFID/NFC 讀卡模組</h3>
+        <p><strong>原理：</strong>讀卡機發出無線電波，卡片內建晶片被感應到電力後回傳一組獨一無二的 UID 序號，Arduino 比對序號決定是否解鎖。</p>
+        <p><strong>使用要點：</strong>使用 SPI 介面，接線腳位較多，模組吃 3.3V，接到 5V 容易燒毀。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/puzzle-escape.html">M7 · 解謎密室機關 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="laser-ky008">
+        <span class="ref">KY-008, 5V</span>
+        <h3>雷射發射模組</h3>
+        <p><strong>原理：</strong>通電後持續發射一道紅色雷射光束，搭配光敏電阻即可做出「光束被打斷」的偵測機關。</p>
+        <p><strong>使用要點：</strong>雷射會直射人眼造成傷害，安裝角度務必遠離使用者臉部高度。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M5 彈珠彈跳台做光束式感應，取代機械感測</span>
+          <span class="tag">建議延伸：可用於 M7 解謎機關，加入不能打斷光束的關卡</span>
+        </div>
+      </div>
+      <div class="card" id="boat-switch">
+        <span class="ref">KCD1 直腳</span>
+        <h3>船型開關／雙切開關</h3>
+        <p><strong>原理：</strong>機構型電源總開關，扳動時內部金屬片直接切斷或接通電路，屬於純機械開關，不需要接 Arduino 腳位。</p>
+        <p><strong>使用要點：</strong>適合裝在外殼上做總電源開關，切斷後上游電路都不通電，較安全。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：建議所有機台外殼都裝一個，方便關機而不用拔線</span>
+        </div>
+      </div>
+      <div class="card" id="toggle-switch">
+        <span class="ref">2P2段</span>
+        <h3>搖頭開關</h3>
+        <p><strong>原理：</strong>撥動式的雙態機械開關，常用來切換兩種模式或當簡易電源開關。</p>
+        <p><strong>使用要點：</strong>接線前先用電表確認撥到不同位置時的通斷狀態。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於任何機台做「模式切換」，例如切換單人／雙人模式</span>
+        </div>
+      </div>
+      <div class="card" id="joystick">
+        <span class="ref">含中心按鍵</span>
+        <h3>JoyStick 雙軸按鍵搖桿</h3>
+        <p><strong>原理：</strong>內部其實是兩顆電位器，分別對應 X、Y 方向，傾斜角度轉換成類比電壓，Arduino 用類比腳位讀出 0–1023 的數值代表方向與幅度。</p>
+        <p><strong>使用要點：</strong>搖桿放開後不一定會回到正中央，寫程式前建議先讀取靜止值做校正。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/led-matrix-snake.html">M1 · LED矩陣貪食蛇 · 目前使用</a>
+          <a class="tag tag-used" href="machines/joystick-dodge.html">M3 · 搖桿躲避機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/claw-machine.html">M6 · 夾娃娃機 · 目前使用</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-3">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>3 · 接線、被動元件</h2>
+      <span class="cat-count">9 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">電路裡不主動運算、但少了它們電路就不穩定甚至燒毀的基礎材料。</p>
+    <div class="card-grid">
+      <div class="card" id="resistor-100">
+        <span class="ref">100歐姆 1/4W 碳膜</span>
+        <h3>限流電阻</h3>
+        <p><strong>原理：</strong>串聯在 LED 或其他元件前，限制流過的電流，避免電流過大燒毀元件或超出腳位負載。</p>
+        <p><strong>使用要點：</strong>LED 正極接電阻，電阻另一端接 Arduino 腳位，方向不影響限流效果。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+          <span class="tag">建議延伸：幾乎每個用到 LED 的機台都建議加上</span>
+        </div>
+      </div>
+      <div class="card" id="breadboard">
+        <span class="ref">中型 400 孔</span>
+        <h3>麵包板／萬用 PCB 板</h3>
+        <p><strong>原理：</strong>內部金屬夾片把每排孔位連通，不用焊接就能快速搭建與拆解電路，適合開發階段測試。</p>
+        <p><strong>使用要點：</strong>中間凹槽是給 IC 跨接用的，兩側電源軌記得先確認正負極方向。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：每個機台的原型階段都建議先在麵包板上驗證</span>
+        </div>
+      </div>
+      <div class="card" id="dupont-wire">
+        <span class="ref">公對公、母對母 10cm</span>
+        <h3>杜邦線／單股導線</h3>
+        <p><strong>原理：</strong>兩端已壓接好接頭的導線，公頭插麵包板、母頭插模組排針，不需要另外焊接。</p>
+        <p><strong>使用要點：</strong>用久了接觸容易鬆動，訊號異常時先換一條線排除線材問題。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：所有機台接線的基本材料</span>
+        </div>
+      </div>
+      <div class="card" id="resistor-10k">
+        <span class="ref">1/4W 10K ohm ±1%</span>
+        <h3>精密電阻（分壓用）</h3>
+        <p><strong>原理：</strong>與光敏電阻等感測元件串聯組成分壓電路，感測阻值變化時分壓點電壓也跟著變化，Arduino 用類比腳位讀出電壓推算感測狀態。</p>
+        <p><strong>使用要點：</strong>精密電阻誤差小，分壓讀值比一般電阻穩定，感測類應用建議用這種。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：搭配光敏電阻，用於光線相關的機關設計</span>
+        </div>
+      </div>
+      <div class="card" id="potentiometer">
+        <span class="ref">16mm 500Ω～500KΩ B類</span>
+        <h3>可變電阻（電位器）</h3>
+        <p><strong>原理：</strong>旋鈕轉動改變滑動端在電阻條上的位置，等同於調整分壓比例，輸出隨旋轉角度變化的類比電壓。</p>
+        <p><strong>使用要點：</strong>B 類電位器阻值隨角度線性變化，適合做直覺的數值調整旋鈕。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可加入 M3 或 M4，做成可調整難度或速度的旋鈕</span>
+        </div>
+      </div>
+      <div class="card" id="diode-1n4007">
+        <span class="ref">1N4007</span>
+        <h3>整流二極體</h3>
+        <p><strong>原理：</strong>電流只能單向通過。馬達或電磁閥斷電瞬間會產生反向高壓突波，並聯一顆二極體讓突波電流有出路，保護電路。</p>
+        <p><strong>使用要點：</strong>務必留意方向，二極體上白色色環標示陰極，接反就失去保護作用。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：建議所有用到馬達、電磁閥或繼電器的機台都加上（M5、M6、M7）</span>
+        </div>
+      </div>
+      <div class="card" id="cap-470uf">
+        <span class="ref">470uF</span>
+        <h3>大容量電解電容</h3>
+        <p><strong>原理：</strong>馬達啟動瞬間需要大電流，電容能瞬間放電補足，減緩電源電壓瞬降，避免 Arduino 因電壓不足而重開機。</p>
+        <p><strong>使用要點：</strong>電解電容有正負極之分，接反可能鼓起甚至爆開，安裝前務必確認極性。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：建議用在 M5、M6 這類多顆馬達同時動作的機台</span>
+        </div>
+      </div>
+      <div class="card" id="cap-104">
+        <span class="ref">104 / 0.1uF</span>
+        <h3>小容量陶瓷電容</h3>
+        <p><strong>原理：</strong>濾除電源線上的高頻雜訊，通常並聯在 IC 電源腳位旁邊，穩定供電品質。</p>
+        <p><strong>使用要點：</strong>沒有極性之分，正反接都可以，靠近雜訊源（如馬達、繼電器）安裝效果較好。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+          <span class="tag">建議延伸：建議加在馬達驅動板、感測模組的電源腳位旁邊</span>
+        </div>
+      </div>
+      <div class="card" id="quick-connector">
+        <span class="ref">通用材料</span>
+        <h3>快接頭</h3>
+        <p><strong>原理：</strong>不用焊接就能快速接合兩段線材，方便之後拆裝與維修。</p>
+        <p><strong>使用要點：</strong>機構完成後如果需要拆外殼維修，快接頭能省下重新焊接的麻煩。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：建議用於外殼與主機板之間的可拆卸連接處</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-4">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>4 · 機械、動力與特效</h2>
+      <span class="cat-count">9 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">讓機台「會動」的機構元件——轉的、彈的、噴的都在這裡。</p>
+    <div class="card-grid">
+      <div class="card" id="relay">
+        <span class="ref">5V</span>
+        <h3>繼電器模組</h3>
+        <p><strong>原理：</strong>用 Arduino 輸出的小電流驅動內部線圈，線圈產生磁力吸合開關接點，藉此控制外部高電壓或大電流設備的通斷，兩邊電路互不直接相連。</p>
+        <p><strong>使用要點：</strong>市面模組多為低觸發，程式邏輯容易寫反，測試時先用電表確認觸發方向。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/puzzle-escape.html">M7 · 解謎密室機關 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="l298n">
+        <span class="ref">L298N</span>
+        <h3>直流馬達驅動板</h3>
+        <p><strong>原理：</strong>Arduino 腳位電流很小，無法直接驅動馬達，L298N 內部有 H 橋電路，能放大電流並控制馬達正反轉與速度。</p>
+        <p><strong>使用要點：</strong>馬達電源建議獨立供電，只共用 GND，避免馬達雜訊干擾 Arduino。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M6 夾娃娃機的移動平台，取代步進馬達方案</span>
+        </div>
+      </div>
+      <div class="card" id="tt-motor">
+        <span class="ref">TT 馬達，黃色外殼</span>
+        <h3>減速馬達</h3>
+        <p><strong>原理：</strong>馬達加上減速齒輪組，犧牲轉速換取更大扭力與更容易控制的轉動速度，適合需要持續旋轉動力的機構。</p>
+        <p><strong>使用要點：</strong>搭配 L298N 等驅動板使用，不要直接接到 Arduino 腳位。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M6 做旋轉展示台，或自製新的傳送帶機關</span>
+        </div>
+      </div>
+      <div class="card" id="stepper-28byj48">
+        <span class="ref">28BYJ-48 + 五線四相驅動板</span>
+        <h3>步進馬達與驅動模組</h3>
+        <p><strong>原理：</strong>馬達內部分成好幾組線圈，依序通電讓轉軸一步一步精準轉動固定角度，不需要額外的位置感測器就能知道轉了幾步。</p>
+        <p><strong>使用要點：</strong>每次啟動建議先歸零（移動到限位開關觸發位置），避免步數累積誤差。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/claw-machine.html">M6 · 夾娃娃機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="servo-sg90">
+        <span class="ref">SG90, 9g</span>
+        <h3>微型伺服馬達</h3>
+        <p><strong>原理：</strong>馬達內建電位器回饋目前角度，控制電路持續比對目標角度與實際角度，能精準定位在 0–180 度之間的任一角度。</p>
+        <p><strong>使用要點：</strong>扭力較小，適合輕量機構，如彈板、小型夾爪、指針等。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/pinball.html">M5 · 彈珠彈跳台 · 目前使用</a>
+          <a class="tag tag-used" href="machines/claw-machine.html">M6 · 夾娃娃機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="servo-mg996r">
+        <span class="ref">MG996R, 11kg扭力</span>
+        <h3>高扭力金屬齒伺服馬達</h3>
+        <p><strong>原理：</strong>原理與 SG90 相同，但用金屬齒輪與更強力馬達，能承受更大負載與力道。</p>
+        <p><strong>使用要點：</strong>扭力大，通電時留意手指與機構間隙，避免夾傷。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M6 做更大夾力的夾爪版本，或 M5 更有力道的彈板</span>
+        </div>
+      </div>
+      <div class="card" id="solenoid">
+        <span class="ref">5V</span>
+        <h3>小型電磁閥</h3>
+        <p><strong>原理：</strong>通電時內部線圈產生磁場吸引鐵芯瞬間彈出，斷電後靠彈簧或重力縮回，動作速度比伺服馬達快很多。</p>
+        <p><strong>使用要點：</strong>瞬間耗電量大，務必透過繼電器或電晶體驅動，並加上二極體保護電路。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M5，做出真正的彈射力道，取代伺服馬達方案</span>
+        </div>
+      </div>
+      <div class="card" id="fan">
+        <span class="ref">4010, 5V 5000轉</span>
+        <h3>微型風扇</h3>
+        <p><strong>原理：</strong>直流馬達帶動扇葉產生氣流，通電即轉動，屬於簡單的開關型輸出裝置。</p>
+        <p><strong>使用要點：</strong>可直接接繼電器或電晶體控制，不需要像伺服馬達那樣做角度控制。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：搭配超音波霧化器，可為 M7 密室機關增加煙霧氣氛效果</span>
+        </div>
+      </div>
+      <div class="card" id="atomizer">
+        <span class="ref">通用材料</span>
+        <h3>超音波微孔霧化器</h3>
+        <p><strong>原理：</strong>利用超音波高頻震動把水打成細緻水霧，原理類似家用加濕器，需要額外供水與電源電路。</p>
+        <p><strong>使用要點：</strong>務必做好防水絕緣，避免霧氣接觸到 Arduino 或其他電子元件。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：搭配風扇可為 M7 密室機關營造神秘氣氛</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-5">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>5 · 顯示、視覺與音效</h2>
+      <span class="cat-count">7 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">讓機台「有回饋」的輸出裝置——玩家靠這些知道發生了什麼事。</p>
+    <div class="card-grid">
+      <div class="card" id="ws2812d">
+        <span class="ref">WS2812D, 5mm</span>
+        <h3>全彩 LED</h3>
+        <p><strong>原理：</strong>每顆 LED 內建控制晶片，只需一條訊號線就能依序控制每顆燈的顏色與亮度，適合做出漸層或跑馬燈效果。</p>
+        <p><strong>使用要點：</strong>燈數一多容易超過 Arduino 5V 腳位負載，建議計算總電流並外部供電。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+          <span class="tag">建議延伸：可用於任何機台做過關特效燈光，例如 M7 各關卡通過時的慶祝燈效</span>
+        </div>
+      </div>
+      <div class="card" id="speaker">
+        <span class="ref">8歐姆 0.5W</span>
+        <h3>揚聲器</h3>
+        <p><strong>原理：</strong>通入變化的電壓訊號，喇叭內部線圈與磁鐵推動紙盆振動發聲，Arduino 常搭配 tone() 函式輸出方波驅動。</p>
+        <p><strong>使用要點：</strong>直接用 Arduino 腳位驅動音量有限，要更大聲建議加小型放大電路。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/led-matrix-snake.html">M1 · LED矩陣貪食蛇 · 目前使用</a>
+          <a class="tag tag-used" href="machines/reaction-button.html">M2 · 反應力搶答機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/joystick-dodge.html">M3 · 搖桿躲避機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/tilt-maze.html">M4 · 傾斜迷宮機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/puzzle-escape.html">M7 · 解謎密室機關 · 目前使用</a>
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="ws2812b-strip">
+        <span class="ref">WS2812B, 5V 30-60燈/米</span>
+        <h3>RGB 燈條</h3>
+        <p><strong>原理：</strong>原理與單顆全彩 LED 相同，做成連續燈條，適合做大範圍的氣氛燈光。</p>
+        <p><strong>使用要點：</strong>燈數多時記得外部供電，並在訊號線上加一顆小電阻保護。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於機台外殼做整體氣氛燈光，尤其適合 M7 密室機關的場景佈置，或替換 M8 聖誕樹的裝飾燈</span>
+        </div>
+      </div>
+      <div class="card" id="oled">
+        <span class="ref">0.96吋 128x64, I2C</span>
+        <h3>OLED 顯示器</h3>
+        <p><strong>原理：</strong>每個像素是獨立自發光的有機LED，不需要背光，透過 I2C 兩條線就能傳送整張畫面的像素資料。</p>
+        <p><strong>使用要點：</strong>I2C 位址通常是 0x3C，可以跟其他 I2C 模組（如 MPU6050）共用同一組 SDA/SCL 接腳。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/joystick-dodge.html">M3 · 搖桿躲避機 · 目前使用</a>
+          <a class="tag tag-used" href="machines/tilt-maze.html">M4 · 傾斜迷宮機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="segment-display">
+        <span class="ref">.36吋 紅光共陰</span>
+        <h3>4位數七段顯示器</h3>
+        <p><strong>原理：</strong>每個數字由 7 段 LED 拼成，控制對應段落通電與否組成 0–9 的數字外觀，共陰極表示共用接地。</p>
+        <p><strong>使用要點：</strong>腳位較多，建議搭配專用驅動 IC（如 TM1637）簡化接線與程式。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/reaction-button.html">M2 · 反應力搶答機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="led-matrix">
+        <span class="ref">MAX7219, 16x8</span>
+        <h3>LED 點矩陣顯示模組</h3>
+        <p><strong>原理：</strong>MAX7219 晶片內建掃描電路，只需 3 條線就能控制整片 LED 矩陣，快速輪流點亮每一行造成視覺上整片同時亮起的效果。</p>
+        <p><strong>使用要點：</strong>多片串接時注意 DIN/DOUT 方向，資料是一片一片往下傳遞的。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/led-matrix-snake.html">M1 · LED矩陣貪食蛇 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="dfplayer">
+        <span class="ref">DFPlayer Mini</span>
+        <h3>MP3 播放模組</h3>
+        <p><strong>原理：</strong>模組內建 MP3 解碼晶片，音樂檔案存在 microSD 卡裡，Arduino 只需送出簡單指令（播第幾首、音量多少）就能播放，不用自己處理音訊解碼。</p>
+        <p><strong>使用要點：</strong>音樂檔案命名與資料夾結構有固定規則，燒錄前先查函式庫說明。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M7 密室機關，播放語音提示或背景音樂取代單純蜂鳴器</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-6">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>6 · 體感與環境感知</h2>
+      <span class="cat-count">6 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">讓機台感覺得到「玩家在做什麼」與「周圍環境如何」的感測器。</p>
+    <div class="card-grid">
+      <div class="card" id="hcsr04">
+        <span class="ref">HC-SR04</span>
+        <h3>超音波測距模組</h3>
+        <p><strong>原理：</strong>發射超音波脈衝並計算聲波碰到物體反射回來的時間，透過音速換算出距離。</p>
+        <p><strong>使用要點：</strong>偵測角度有限，物體正對感測器時讀值最準確，斜角或太軟的表面容易誤判。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可用於 M3，做出用身體靠近／遠離螢幕控制的體感玩法</span>
+        </div>
+      </div>
+      <div class="card" id="photoresistor">
+        <span class="ref">5mm (5528)</span>
+        <h3>光敏電阻</h3>
+        <p><strong>原理：</strong>阻值隨環境光線強弱變化，光線越強阻值越小，通常搭配固定電阻組成分壓電路讓 Arduino 讀出光線變化。</p>
+        <p><strong>使用要點：</strong>環境光源（如日光燈閃爍）可能造成讀值抖動，建議加入簡單的平均濾波。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：搭配雷射模組，可做成 M5 或 M7 的光束感應機關</span>
+        </div>
+      </div>
+      <div class="card" id="mpu6050">
+        <span class="ref">MPU-6050 模組</span>
+        <h3>六軸陀螺儀／加速度計</h3>
+        <p><strong>原理：</strong>內部有微機電加速度計與陀螺儀，分別偵測三軸加速度與三軸旋轉角速度，透過運算能推算出裝置目前的傾斜角度。</p>
+        <p><strong>使用要點：</strong>讀值會有雜訊，實務上常搭配低通濾波或互補濾波讓角度計算更穩定。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/tilt-maze.html">M4 · 傾斜迷宮機 · 目前使用</a>
+        </div>
+      </div>
+      <div class="card" id="gesture-paj7620">
+        <span class="ref">Grove-Gesture, PAJ7620U2</span>
+        <h3>手勢辨識模組</h3>
+        <p><strong>原理：</strong>模組內建紅外線陣列感測手部移動軌跡，能辨識上/下/左/右等基本手勢並直接透過 I2C 回傳結果，不需要自己處理影像運算。</p>
+        <p><strong>使用要點：</strong>偵測距離較短，手勢需在模組正前方約 10-15 公分內進行。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可為任何機台加入隔空手勢操作，例如取代 M3 的搖桿控制</span>
+        </div>
+      </div>
+      <div class="card" id="pressure-sensor">
+        <span class="ref">KEYES 電阻式</span>
+        <h3>薄膜壓力感測器</h3>
+        <p><strong>原理：</strong>材料受壓時內部導電粒子接觸面積改變，阻值隨壓力大小變化，可感測按壓或打擊的力道大小。</p>
+        <p><strong>使用要點：</strong>感測面積小且脆弱，建議加裝保護墊片分散受力點。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可自製新的「測力機」機台，或加入 M2 做出依力道大小給分的版本</span>
+        </div>
+      </div>
+      <div class="card" id="color-tcs3200">
+        <span class="ref">TCS3200</span>
+        <h3>顏色感測器</h3>
+        <p><strong>原理：</strong>模組內建紅、綠、藍濾光的光敏元件，分別讀取物體反射光在三個顏色通道的強度比例，藉此判斷物體顏色。</p>
+        <p><strong>使用要點：</strong>環境光會干擾判讀，建議加裝遮光罩並固定感測距離。</p>
+        <div class="tag-row">
+          <span class="tag">建議延伸：可為 M7 密室機關加入依顏色分類的解謎關卡</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="cat-7">
+  <div class="wrap">
+    <div class="category-head">
+      <h2>7 · 結構、造型</h2>
+      <span class="cat-count">1 項元件</span>
+    </div>
+    <p class="section-head" style="margin-bottom:24px;">把電路變成一台「看起來像機台」的外殼與機構。</p>
+    <div class="card-grid">
+      <div class="card" id="enclosure">
+        <span class="ref">雷切用木板 40x60cm</span>
+        <h3>雷切外殼木板</h3>
+        <p><strong>原理：</strong>用雷射切割機依照設計圖切割木板，組裝成機台外殼或機構結構件，比 3D 列印更快速、成本更低，適合平面結構。</p>
+        <p><strong>使用要點：</strong>設計圖務必保留元件安裝孔位與走線孔，組裝前先用厚紙板打樣確認尺寸。</p>
+        <div class="tag-row">
+          <a class="tag tag-used" href="machines/christmas-tree.html">M8 · 聖誕樹互動遊戲機 · 目前使用</a>
+          <span class="tag">建議延伸：也適用於其他機台的外殼與機構製作</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="info-strip">
+  <div class="wrap info-grid">
+    <div class="info-item">
+      <span class="mark">✓</span>
+      <div><strong>目前教學使用</strong><p>teal 標籤代表八台機台教學裡實際用到這個元件</p></div>
+    </div>
+    <div class="info-item">
+      <span class="mark">+</span>
+      <div><strong>建議延伸應用</strong><p>灰色標籤是這個元件可以拿來做的延伸實驗方向</p></div>
+    </div>
+    <div class="info-item">
+      <span class="mark">i</span>
+      <div><strong>原理先懂再接線</strong><p>知道元件怎麼運作，接錯線或程式出錯時比較好排查</p></div>
+    </div>
+    <div class="info-item">
+      <span class="mark">→</span>
+      <div><strong>對照機台教學</strong><p>回到<a href="index.html#machines">機台教學</a>看完整接線與程式範例</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考，實作機構請留意馬達與電源安全</span>
+  </div>
+</footer>
+
+</body>
+</html>
