@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用 AI 做出 Arduino 遊戲機台 · 教學</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate:#1c2128; --slate2:#161a20;
+    --graphite:#2a3139; --graphite-lo:#1f242b;
+    --brass:#d9b878; --brass-mid:#b8935a; --brass-lo:#8a6d3f;
+    --amber:#ffce78;
+    --txt:#e7e3da; --txt-dim:#9aa1a9;
+    --line:rgba(255,255,255,.08);
+    --display:"Chakra Petch", system-ui, sans-serif;
+    --cjk:"PingFang TC","Microsoft JhengHei","Noto Sans TC", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--cjk);color:var(--txt);line-height:1.8;
+    background:radial-gradient(120% 70% at 50% 0%, #29313a 0%, var(--slate) 46%, var(--slate2) 100%);}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 22px 80px}
+  a{color:var(--brass)}
+
+  header{text-align:center;margin-bottom:14px}
+  .kicker{font-family:var(--display);font-weight:600;letter-spacing:3px;font-size:12px;color:var(--brass-mid);text-transform:uppercase}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:1px;font-size:30px;margin:10px 0 6px}
+  .lede{color:var(--txt-dim);font-size:15px;max-width:560px;margin:0 auto}
+  .back{display:inline-block;margin-top:16px;color:var(--txt-dim);font-size:13px;text-decoration:none}
+  .back:hover{color:var(--brass)}
+
+  .toc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px 0 8px}
+  .toc a{font-size:13px;color:var(--txt-dim);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .toc a:hover{color:var(--brass);border-color:rgba(217,184,120,.4)}
+
+  section{margin-top:40px;scroll-margin-top:20px}
+  h2{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:1px;margin:0 0 6px;display:flex;align-items:baseline;gap:10px}
+  h2 .n{color:var(--brass);font-size:15px}
+  .note{color:var(--txt-dim);font-size:14px;margin:0 0 16px}
+  p{margin:0 0 14px}
+  strong{color:#fff}
+
+  .card{background:linear-gradient(180deg,#262d36,#1d232b);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0;
+    box-shadow:0 20px 40px -28px rgba(0,0,0,.7)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:560px){.grid2{grid-template-columns:1fr}}
+  .spec-q{background:#15191f;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .spec-q .q{font-family:var(--display);color:var(--brass);font-size:15px;margin-bottom:4px}
+  .spec-q .d{color:var(--txt-dim);font-size:13px}
+  details.spec-q{padding:0}
+  details.spec-q>summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;align-items:center;gap:8px}
+  details.spec-q>summary::-webkit-details-marker{display:none}
+  details.spec-q>summary .q{margin:0}
+  details.spec-q .advbadge{font-size:11px;color:var(--brass-mid);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+  details.spec-q>summary::after{content:"＋";margin-left:auto;color:var(--txt-dim);font-family:var(--display);font-size:16px}
+  details.spec-q[open]>summary::after{content:"－"}
+  details.spec-q .d{padding:0 14px 14px}
+  .spec-q.adv{padding:0}
+  .spec-q.adv summary{list-style:none;cursor:pointer;padding:14px;font-family:var(--display);color:var(--brass);font-size:15px;display:flex;align-items:center;gap:8px}
+  .spec-q.adv summary::-webkit-details-marker{display:none}
+  .spec-q.adv summary::after{content:"＋";margin-left:auto;color:var(--txt-dim);font-size:16px}
+  .spec-q.adv[open] summary::after{content:"－"}
+  .spec-q.adv .d{padding:0 14px 14px}
+  .advbadge{font-size:11px;color:var(--brass-mid);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  ol.steps li{position:relative;padding:14px 14px 14px 56px;background:#15191f;border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+  ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:8px;
+    background:var(--brass-mid);color:#1c1206;font-family:var(--display);font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol.steps li b{color:#fff}
+
+  ul.plain{list-style:none;padding:0;margin:0}
+  ul.plain li{padding:10px 0;border-bottom:1px solid var(--line)}
+  ul.plain li:last-child{border-bottom:none}
+  ul.plain li b{color:#fff}
+
+  /* 十行清單 */
+  .checklist{margin:0;padding:0;list-style:none}
+  .checklist li{padding:12px 0;border-bottom:1px solid var(--line)}
+  .checklist li:last-child{border-bottom:none}
+  .ci-rule{color:var(--txt)}
+  .ci-why{color:var(--txt-dim);font-size:13px;margin-top:3px}
+  .ci-why b{color:#e0a04e;font-weight:600}
+
+  /* 產生器 */
+  .gen label{display:block;font-size:14px;color:#fff;font-weight:600;margin:14px 0 6px}
+  .gen textarea{width:100%;background:#13171c;border:1px solid var(--line);border-radius:11px;color:var(--txt);padding:12px 14px;font-size:15px;font-family:var(--cjk);min-height:60px;resize:vertical;line-height:1.6}
+  .gen textarea:focus{outline:none;border-color:var(--brass-mid)}
+  .checks{margin-top:6px}
+  .chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer}
+  .chk input{margin-top:4px;width:18px;height:18px;accent-color:var(--brass-mid);flex:none}
+  .chk span{font-size:14px;color:var(--txt)}
+  .genbtns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .btn{border:none;border-radius:12px;padding:13px 22px;font-family:var(--cjk);font-weight:700;font-size:15px;cursor:pointer}
+  .btn.primary{background:linear-gradient(180deg,var(--brass),var(--brass-mid));color:#1c1206}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+  .out{margin-top:16px;background:#0e1216;border:1px solid var(--line);border-radius:12px;padding:14px;white-space:pre-wrap;font-size:13.5px;color:#d8e0e6;line-height:1.7;display:none}
+  .out.show{display:block}
+  .copied{color:#5fbf7e;font-size:13px;margin-left:6px}
+
+  .tip{background:rgba(217,184,120,.08);border:1px solid rgba(217,184,120,.25);border-radius:12px;padding:14px 16px;color:#ecd9b0;font-size:14px}
+  code{background:#0e1216;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-family:var(--display);font-size:.9em;color:var(--brass);word-break:break-word}
+  footer{margin-top:50px;text-align:center;color:var(--txt-dim);font-size:13px;border-top:1px solid var(--line);padding-top:24px}
+  .parts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+  .parts span{font-size:12.5px;background:#15191f;border:1px solid var(--line);color:var(--txt-dim);border-radius:999px;padding:5px 12px}
+  /* 簡報模式 */
+  #presentBtn{position:fixed;top:14px;right:14px;z-index:30;border:1px solid rgba(217,184,120,.4);background:rgba(0,0,0,.35);color:var(--brass);border-radius:999px;padding:8px 16px;font-family:var(--cjk);font-size:13px;cursor:pointer}
+  #presentBtn:hover{background:rgba(217,184,120,.15)}
+  #slideNav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;display:none;align-items:center;gap:10px;background:rgba(20,24,30,.92);border:1px solid var(--line);border-radius:999px;padding:8px 12px;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
+  body.present #slideNav{display:flex}
+  #slideNav button{border:none;background:transparent;color:var(--txt);font-size:18px;cursor:pointer;width:40px;height:40px;border-radius:50%;font-family:var(--cjk)}
+  #slideNav button:hover{background:rgba(255,255,255,.08);color:var(--brass)}
+  #slideNav .count{font-family:var(--display);font-size:14px;color:var(--txt-dim);min-width:58px;text-align:center}
+  body.present{overflow:hidden;background:var(--slate)}
+  body.present .wrap{max-width:none;margin:0;padding:0}
+  body.present .toc,body.present .back,body.present footer,body.present #presentBtn{display:none}
+  body.present header,body.present section{display:none}
+  body.present .slide-active{display:block;position:fixed;inset:0;overflow:auto;padding:6vh 8vw 13vh;margin:0;background-color:var(--slate);background-image:radial-gradient(120% 70% at 50% 0%, #29313a 0%, var(--slate) 46%, var(--slate2) 100%);animation:slidein .25s ease}
+  @keyframes slidein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  body.present .slide-active>*{max-width:920px;margin-left:auto;margin-right:auto}
+  body.present .slide-active h1{font-size:42px}
+  body.present .slide-active h2{font-size:32px}
+  body.present .slide-active .lede,body.present .slide-active p,body.present .slide-active li,body.present .slide-active .ci-rule,body.present .slide-active .spec-q .q{font-size:18px}
+  body.present .slide-active .note,body.present .slide-active .d,body.present .slide-active .ci-why{font-size:15px}
+  @media print{body{background:#fff;color:#000}.toc,.genbtns,.back,.out{display:none!important}.card{box-shadow:none;border-color:#ccc}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Student Guide</div>
+    <h1>用 AI 做出 Arduino 遊戲機台</h1>
+    <p class="lede">如何用 AI 協助設計並做出一台像範例庫那樣好玩的 Arduino 遊戲機台。重點不在會不會叫 AI 生程式碼，而在想不想得清楚——一台好玩的機台，玩法、零件、回饋該怎麼配。</p>
+    <a class="back" href="../">← 回機台範例庫</a>
+  </header>
+
+  <nav class="toc">
+    <a href="#idea">核心觀念</a>
+    <a href="#flow">製作步驟</a>
+    <a href="#spec">設計規格</a>
+    <a href="#gen">提示詞產生器</a>
+    <a href="#habit">好習慣</a>
+    <a href="#publish">測試與展示</a>
+  </nav>
+
+  <section id="idea">
+    <h2><span class="n">①</span>核心觀念</h2>
+    <p>與其叫 AI 從零生出一整台機台，不如先把設計想清楚，再請它實作程式碼。為什麼？因為 AI 生出來的程式碼<strong>「看起來能編譯、能燒錄」不代表電路跟玩法真的對</strong>——要做的，是把想法講清楚、再一一驗收。這頁要練的，是兩件帶得走的能力：</p>
+    <div class="card">
+      <p style="margin:0 0 8px"><strong>一、把設計想清楚</strong>，再開口問 AI。先寫好規格與接腳表，AI 才生得準（見下方規格）。</p>
+      <p style="margin:0"><strong>二、會驗收自己的成果</strong>。會用三用電表量、會看 Serial Monitor、會一個零件一個零件單獨測。</p>
+    </div>
+    <p class="note">一句話：別只想著「叫 AI 生一份 .ino 給我」，而是先當設計師、再當工程師、最後當品管。這三件事換任何題目、任何板子都用得上。</p>
+  </section>
+
+  <section id="flow">
+    <h2><span class="n">②</span>一台機台怎麼做出來</h2>
+    <p class="note">先看整個流程，後面幾段再一一細談。</p>
+    <ol class="steps">
+      <li><b>玩 + 拆解</b>：先玩現有機台或範例，拆解它的玩法、用了哪些零件、怎麼給玩家回饋——也就是下面要教的「規格」。</li>
+      <li><b>寫規格</b>：把想做的機台，玩法、零件、接腳表填清楚——這一步先別碰 AI。</li>
+      <li><b>單元測試</b>：先在麵包板上把每個零件（按鈕、LED、蜂鳴器、馬達…）各自接好、各自測過會動，再談整合。</li>
+      <li><b>用 AI 實作</b>：把規格 + 技術要點用下面的產生器組成提示詞，貼給 AI，邊生、邊燒錄、邊測。</li>
+      <li><b>互測 + 展示</b>：跟同學交換玩、回報問題、修好、再展示。機台本來就是要被別人玩的。</li>
+    </ol>
+  </section>
+
+  <section id="spec">
+    <h2><span class="n">③</span>設計規格</h2>
+    <p class="note">範例庫裡的機台都是同一個結構。動手前先把這份規格想清楚，先別急著找 AI。</p>
+    <div class="grid2">
+      <div class="spec-q"><div class="q">玩法是什麼？</div><div class="d">玩家看到什麼、操作哪個零件（按鈕、搖桿、光敏電阻…）、要做什麼動作？</div></div>
+      <div class="spec-q"><div class="q">怎樣算過關／得分？</div><div class="d">一個明確、不含糊、能用數字判斷的成功條件。</div></div>
+      <div class="spec-q"><div class="q">過關給什麼回饋？</div><div class="d">LED 燈效、蜂鳴器音效、伺服馬達動作、LCD／OLED 顯示文字，擇一或組合。</div></div>
+      <div class="spec-q"><div class="q">零件與接腳？</div><div class="d">用了哪些元件（Arduino Uno R4、按鈕、LED、蜂鳴器、伺服馬達、感測器…），各接哪一支腳位。這決定電路真正接不接得起來，最容易被忘記，卻最影響能不能動。</div></div>
+      <details class="spec-q adv" style="grid-column:1/-1">
+        <summary><span class="q">參數能調什麼？</span><span class="advbadge">進階選用</span></summary>
+        <div class="d">參數是為了之後能快速調整難度（時間限制、分數門檻、感測器靈敏度），可以用可調電位器、序列埠指令，或 Uno R4 WiFi 版做網頁後台。對機台能不能玩不是必要的，先做出能玩的版本，行有餘力再加。</div>
+      </details>
+    </div>
+  </section>
+
+  <section id="gen">
+    <h2><span class="n">④</span>規格 → 提示詞產生器</h2>
+    <p class="note">把規格填一填，下面的技術要點建議全勾（它們會附在提示最後），按「產生提示詞」就會組出一段可直接貼給 AI 的提示。這就是把設計變成 AI 看得懂的需求。</p>
+    <div class="card gen">
+      <label>① 玩法（玩家操作哪個零件、做什麼動作）</label>
+      <textarea id="qPlay" placeholder="例如：玩家要在限定時間內連續按對四顆按鈕對應的顏色，按對才算過關。"></textarea>
+      <label>② 怎樣算過關／得分</label>
+      <textarea id="qWin" placeholder="例如：四顆按鈕依正確順序按完、且總時間在 30 秒內。"></textarea>
+      <label>③ 過關後給玩家的回饋</label>
+      <textarea id="qClue" placeholder="例如：蜂鳴器播放勝利音效、伺服馬達打開一個小門、LED 全部閃爍三次。"></textarea>
+      <label>④ 使用的零件與接腳</label>
+      <textarea id="qParts" placeholder="例如：Arduino Uno R4 Minima、4 顆按鈕接 D2–D5（INPUT_PULLUP）、蜂鳴器接 D8、伺服馬達訊號線接 D9、4 顆 LED 分別接 D10–D13。"></textarea>
+      <label>⑤ 參數能調整什麼（進階選用，可留空）</label>
+      <textarea id="qAdmin" placeholder="不一定要做。若想之後方便改：時間限制、按鍵順序、音效開關…"></textarea>
+
+      <label style="margin-top:18px">技術要點：AI 常漏、建議全勾（會附在提示詞最後）</label>
+      <p class="note" style="margin:2px 0 8px">這幾條 AI 容易漏、漏了又不容易發現，每條都標了「沒寫會怎樣」。</p>
+      <div class="checks" id="checks"></div>
+
+      <div class="genbtns">
+        <button class="btn primary" id="genBtn">產生提示詞</button>
+        <button class="btn ghost" id="copyBtn">複製<span class="copied" id="copied"></span></button>
+      </div>
+      <div class="out" id="out"></div>
+    </div>
+  </section>
+
+  <section id="habit">
+    <h2><span class="n">⑤</span>要養成的習慣</h2>
+    <ul class="plain">
+      <li><b>驗證，不盲信。</b>AI 給的程式碼，每個功能都自己實測：按鈕在 Serial Monitor 看得到訊號嗎？LED 真的會亮嗎？馬達會不會抖動或過熱？供電夠不夠？</li>
+      <li><b>會回報問題。</b>講「具體現象」而不是只說「壞了」。試試這個句型：<br><span style="color:var(--amber)">「我按了＿＿，預期會＿＿，結果卻＿＿。」</span>能附上 Serial Monitor 截圖或接線照片更好，這樣 AI 才修得準。</li>
+      <li><b>需求講滿、工作切小。</b>一開始把零件、接腳、規則一次講清楚，沒講的 AI 會自己猜；後續修改一次只改一個功能，改一段、燒錄一段、驗一段，才抓得到錯、保持得住掌控。這不只對 AI，做任何專題都適用。</li>
+    </ul>
+  </section>
+
+  <section id="publish">
+    <h2><span class="n">⑥</span>做好之後：測試與展示</h2>
+    <p class="note">機台做好之後，重點是能穩定被別人玩、也能被別人看懂你怎麼做的。兩件事都做，這個專題才算完整。</p>
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <p style="margin:0 0 6px"><strong>GitHub</strong>　<span style="color:var(--txt-dim);font-size:13px">保存程式碼與版本紀錄</span></p>
+        <p style="margin:0 0 10px;color:var(--txt-dim);font-size:14px">把 <code>.ino</code> 程式碼、接線圖（或 Fritzing 檔）、零件清單放進同一個倉庫，改完重新上傳就有紀錄，之後想回溯某一版也找得到。</p>
+        <p style="margin:0;font-size:13.5px;line-height:1.9">建倉庫 → 上傳程式碼與接線圖 → 寫一份 <code>README.md</code> 說明零件與玩法</p>
+        <p style="margin:12px 0 0"><a href="https://github.com/signup" target="_blank" rel="noopener">→ 註冊 GitHub</a></p>
+      </div>
+      <div class="card" style="margin:0">
+        <p style="margin:0 0 6px"><strong>展示影片／QR Code</strong>　<span style="color:var(--txt-dim);font-size:13px">讓沒帶機台在身邊的人也能看懂</span></p>
+        <p style="margin:0 0 10px;color:var(--txt-dim);font-size:14px">錄一段 30–60 秒的操作示範，完整拍到「玩法 → 過關 → 回饋」。上傳後用 QR code 貼在機台旁，展示時掃碼就能看。</p>
+        <p style="margin:0;font-size:13.5px;line-height:1.9">若是 Arduino Uno R4 WiFi 版，也可以做一個網頁後台即時顯示分數，再用同樣方式部署到 GitHub Pages。</p>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:14px">怎麼選：先求「機台能穩定被玩」再談展示形式。程式碼上 GitHub、接線圖拍照存證、留一段展示影片，這三件事做齊，別人不用在場也能懂你做了什麼、怎麼做的。</div>
+  </section>
+
+  <footer>
+    校園 Arduino 遊戲機台範例庫 · 教學頁<br>
+    <a href="../">← 回機台範例庫</a> ｜ <a href="../template/">看空白機台範本</a>
+  </footer>
+</div>
+
+<button id="presentBtn">▶ 簡報模式</button>
+<div id="slideNav">
+  <button id="slidePrev" title="上一頁 (←)">◀</button>
+  <span class="count" id="slideCount"></span>
+  <button id="slideNext" title="下一頁 (→)">▶</button>
+  <button id="slideExit" title="離開 (Esc)">✕</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var header=document.querySelector(".wrap > header");
+  var slides=[header].concat(Array.prototype.slice.call(document.querySelectorAll(".wrap > section")));
+  var cur=0, on=false;
+  var countEl=document.getElementById("slideCount");
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(s,idx){ s.classList.toggle("slide-active", idx===cur); });
+    countEl.textContent=(cur+1)+" / "+slides.length;
+    if(slides[cur]) slides[cur].scrollTop=0;
+  }
+  function enter(){ on=true; document.body.classList.add("present"); show(0); }
+  function exit(){ on=false; document.body.classList.remove("present"); slides.forEach(function(s){s.classList.remove("slide-active");}); }
+  function next(){ if(cur<slides.length-1) show(cur+1); }
+  function prev(){ if(cur>0) show(cur-1); }
+  document.getElementById("presentBtn").addEventListener("click",enter);
+  document.getElementById("slideNext").addEventListener("click",next);
+  document.getElementById("slidePrev").addEventListener("click",prev);
+  document.getElementById("slideExit").addEventListener("click",exit);
+  document.addEventListener("keydown",function(e){
+    if(!on)return;
+    if(e.key==="Escape"){ exit(); return; }
+    var tag=((e.target&&e.target.tagName)||"").toUpperCase();
+    if(tag==="TEXTAREA"||tag==="INPUT")return;
+    if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){ e.preventDefault(); next(); }
+    else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); prev(); }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var TECH=[
+    { rule:"按鈕、開關等輸入要做 debounce（防彈跳）處理，避免機械接點瞬間彈跳造成誤判。", why:"沒寫 → 按一下卻觸發好幾次判定，分數或關卡狀態會亂跳。" },
+    { rule:"主迴圈避免用 delay() 長時間阻塞，需要同時計時或同時反應多個輸入時改用 millis()。", why:"沒寫 → LED 閃爍或蜂鳴器響的時候，整台機台會卡住、按鈕沒反應。" },
+    { rule:"數位輸入腳位用 INPUT_PULLUP 或外接上／下拉電阻，避免浮接雜訊。", why:"沒寫 → 按鈕沒按也會亂觸發，或觸發後彈不回來。" },
+    { rule:"伺服馬達、繼電器、馬達等大電流元件要獨立供電，不要只靠 Arduino 的 5V 輸出。", why:"沒寫 → 馬達一動整板電壓下降，LED 閃爍或板子重開機。" },
+    { rule:"LED、蜂鳴器等輸出腳位要加上限流電阻（LED 常見 220–330Ω）。", why:"沒寫 → 長時間使用電流過大，零件過熱或縮短壽命，甚至燒毀。" },
+    { rule:"「重新開始」時，所有變數（分數、計時器、關卡狀態、已按過的按鈕）要真的歸零。", why:"沒寫 → 玩第二輪會殘留上一輪的分數或狀態，判定跟著錯。" },
+    { rule:"過關／得分的判定條件要用具體數值寫死，不要讓程式自己猜。", why:"沒寫 → AI 會自己猜一個鬆散條件，容易誤判過關或過不了關。" },
+    { rule:"在關鍵地方用 Serial.println() 印出除錯訊息，方便用序列埠監控視窗排查。", why:"沒寫 → 機台不動時完全不知道卡在硬體還是程式的哪一步。" },
+    { rule:"若有隨機出題或打亂順序，要確保一定有解、也不會一開機就已經過關。", why:"沒寫 → 偶爾一開機就過關，或題目根本解不開。" },
+    { rule:"上傳程式前先確認開發板型號與連接埠（Arduino Uno R4 Minima／WiFi）選對。", why:"沒寫 → 編譯或上傳失敗，或把程式燒錄到錯的裝置。" }
+  ];
+
+  // 產生器的勾選清單（含「沒寫會怎樣」）
+  var checks=document.getElementById("checks");
+  TECH.forEach(function(t,i){
+    var lab=document.createElement("label"); lab.className="chk";
+    var cb=document.createElement("input"); cb.type="checkbox"; cb.checked=true; cb.dataset.i=i;
+    var sp=document.createElement("span");
+    var why=t.why.replace(/^[^→]*→\s*/,"");
+    sp.innerHTML='<span class="ci-rule">'+escapeHtml(t.rule)+'</span><br><span class="ci-why"><b>沒寫會：</b>'+escapeHtml(why)+'</span>';
+    lab.appendChild(cb); lab.appendChild(sp); checks.appendChild(lab);
+  });
+
+  function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function val(id){ return document.getElementById(id).value.trim(); }
+
+  var lastPrompt="";
+  function build(){
+    var play=val("qPlay"), win=val("qWin"), clue=val("qClue"), parts=val("qParts"), admin=val("qAdmin");
+    var p="我想做一個給同學玩的 Arduino 遊戲機台專題，使用 Arduino Uno R4。請用 Arduino C/C++ 寫出完整的單一 .ino 檔案，程式內註解用繁體中文。\n\n";
+    p+="【玩法】\n"+(play||"（請描述玩家操作哪個零件、要做什麼動作）")+"\n\n";
+    p+="【怎樣算過關／得分】\n"+(win||"（請描述明確、可用數字判斷的成功條件）")+"\n\n";
+    p+="【過關後給玩家的回饋】\n"+(clue||"（例如：燈效、音效、馬達動作或顯示文字）")+"\n\n";
+    p+="【零件與接腳】\n"+(parts||"（請列出所有零件與各自接的腳位）")+"\n\n";
+    if(admin) p+="【參數要能調整的東西（選用）】\n"+admin+"\n\n";
+    var picked=[];
+    Array.prototype.forEach.call(checks.querySelectorAll("input"),function(cb){ if(cb.checked) picked.push(TECH[+cb.dataset.i].rule); });
+    if(picked.length){
+      p+="請務必遵守以下技術要點：\n";
+      picked.forEach(function(r,i){ p+=(i+1)+". "+r+"\n"; });
+      p+="\n";
+    }
+    p+="先簡單說明你打算怎麼做（含接線方式），再給我完整的 .ino 程式碼。";
+    lastPrompt=p;
+    var out=document.getElementById("out"); out.textContent=p; out.classList.add("show");
+    document.getElementById("copied").textContent="";
+  }
+  document.getElementById("genBtn").addEventListener("click",build);
+  document.getElementById("copyBtn").addEventListener("click",function(){
+    if(!lastPrompt){ build(); }
+    var done=function(){ document.getElementById("copied").textContent="已複製！"; };
+    var fail=function(){ document.getElementById("copied").textContent="請手動選取複製"; };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(lastPrompt).then(done,fail); }
+    else {
+      try{ var ta=document.createElement("textarea"); ta.value=lastPrompt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done(); }catch(e){ fail(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
