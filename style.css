@@ -328,3 +328,74 @@ footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:1
   .info-grid{ grid-template-columns: 1fr 1fr; }
   .flow-arrow{ display:none; }
 }
+
+/* ============================================================
+   元件百科頁面專用樣式
+   ============================================================ */
+:root{
+  --red-tint: #FDECEA;
+  --purple: #7C5CBF;
+  --purple-light: #9679D1;
+  --purple-tint: #EFE9F9;
+}
+.feature-grid{ grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); }
+.feature-card.red .icon-block{ background: var(--red-tint); color: var(--red); }
+.feature-card.purple .icon-block{ background: var(--purple-tint); color: var(--purple); }
+.btn-red{ background: var(--red); color:#fff; border-color: var(--red); }
+.btn-red:hover{ background:#EB6357; border-color:#EB6357; text-decoration:none; }
+.btn-purple{ background: var(--purple); color:#fff; border-color: var(--purple); }
+.btn-purple:hover{ background: var(--purple-light); border-color: var(--purple-light); text-decoration:none; }
+
+section[id], .card[id]{ scroll-margin-top: 90px; }
+
+.quicknav{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 8px; }
+.quicknav a{
+  font-size:0.82rem; font-weight:600; color: var(--text-soft); background: var(--surface-alt);
+  border:1px solid var(--border); padding:7px 15px; border-radius: var(--radius-pill);
+}
+.quicknav a:hover{ color: var(--teal-dark); border-color: var(--teal); text-decoration:none; }
+
+a.tag{ display:inline-block; }
+a.tag:hover{ border-color: var(--teal); color: var(--teal-dark); text-decoration:none; }
+.tag-used{ background: var(--teal-tint); color: var(--teal-dark); border-color: var(--teal); font-weight:600; }
+
+.category-head{ display:flex; align-items:baseline; gap:12px; margin-bottom: 6px; }
+.category-head .cat-count{ font-size:0.8rem; color: var(--text-mute); font-weight:600; }
+
+/* -------------------- 章節編號徽章（①②③...）-------------------- */
+.section-num{
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+  width:30px; height:30px; border-radius:50%; background: var(--teal-tint); color: var(--teal-dark);
+  font-family: var(--font-display); font-weight:700; font-size:0.88rem;
+}
+h2.numbered{ display:flex; align-items:center; gap:12px; }
+
+/* -------------------- 互動表單元件（提示詞產生器等用）-------------------- */
+.field-label{ display:block; font-size:0.88rem; font-weight:700; color: var(--text); margin:18px 0 6px; }
+.field-label:first-child{ margin-top:0; }
+textarea.field{
+  width:100%; background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); padding:12px 14px; font-size:0.92rem; font-family: var(--font-body); min-height:60px;
+  resize:vertical; line-height:1.6;
+}
+textarea.field:focus{ outline:none; border-color: var(--teal); }
+.check-row{ display:flex; gap:10px; align-items:flex-start; padding:11px 0; border-bottom:1px solid var(--border-soft); cursor:pointer; }
+.check-row:last-child{ border-bottom:none; }
+.check-row input{ margin-top:4px; width:17px; height:17px; accent-color: var(--teal); flex:none; }
+.check-row .rule{ font-size:0.88rem; color: var(--text); }
+.check-row .why{ font-size:0.8rem; color: var(--text-mute); margin-top:3px; }
+.check-row .why b{ color: var(--orange); font-weight:700; }
+.output-box{
+  margin-top:16px; background: var(--surface-alt); border:1px solid var(--border); border-radius: var(--radius-sm);
+  padding:16px; white-space:pre-wrap; font-size:0.86rem; color: var(--text); line-height:1.7; display:none; font-family: var(--font-mono);
+}
+.output-box.show{ display:block; }
+.copied-msg{ color: var(--green-check); font-size:0.82rem; margin-left:8px; }
+
+/* 可折疊的進階選項 */
+details.spec-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+details.spec-card summary{ list-style:none; cursor:pointer; padding:20px 22px; display:flex; align-items:center; gap:10px; }
+details.spec-card summary::-webkit-details-marker{ display:none; }
+details.spec-card summary::after{ content:"+"; margin-left:auto; color: var(--text-mute); font-family: var(--font-display); font-size:1.1rem; }
+details.spec-card[open] summary::after{ content:"−"; }
+details.spec-card .body{ padding:0 22px 20px; }

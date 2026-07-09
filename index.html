@@ -26,7 +26,7 @@
     <div>
       <span class="eyebrow">// DIY ARCADE WORKSHOP</span>
       <h1>用 Arduino，<br>做出你自己的<span class="hl">遊戲機台</span>。</h1>
-      <p class="lead">從一顆按鈕、一片 LED 矩陣，到會轉會夾的機構——這裡收錄八種可以實際做出來的遊戲機台教學，並教你如何借助 AI 一起設計關卡、寫程式、抓 bug。全站公開免費，不需要註冊帳號。</p>
+      <p class="lead">從一顆按鈕、一片 LED 矩陣，到會轉會夾的機構——這裡收錄 21 種可以實際做出來的遊戲機台教學，並教你如何借助 AI 一起設計關卡、寫程式、抓 bug。全站公開免費，不需要註冊帳號。</p>
       <div class="btn-row">
         <a href="#machines" class="btn btn-primary">瀏覽機台教學</a>
         <a href="ai-collaboration.html" class="btn btn-ghost">AI 協作怎麼用</a>
@@ -81,7 +81,7 @@
     <div class="flow-row">
       <div class="flow-step">
         <div class="flow-icon">01</div>
-        <div><h4>挑機台</h4><p>八種難度由淺入深，先看總覽再決定</p></div>
+        <div><h4>挑機台</h4><p>21 種難度由淺入深，先看總覽再決定</p></div>
       </div>
       <span class="flow-arrow">→</span>
       <div class="flow-step">
@@ -110,9 +110,9 @@
 
       <div class="feature-card">
         <span class="ribbon">推薦從這裡開始</span>
-        <div class="icon-block">M1–M8</div>
+        <div class="icon-block">M1–M21</div>
         <h3>機台教學庫</h3>
-        <p class="desc">八種可以實際做出來的遊戲機台，難度由淺入深排列，每頁都有完整的玩法、材料與接線說明。</p>
+        <p class="desc">21 種可以實際做出來的遊戲機台，從入門電子學到派對機關都有，每頁都有完整的玩法、材料與接線說明。</p>
         <ul class="check-list">
           <li>難度與製作時間標示</li>
           <li>材料清單與接線腳位對照表</li>
@@ -150,6 +150,7 @@
         <div class="card-btn-row">
           <a href="ai-collaboration.html" class="btn btn-orange btn-sm">進入 AI 協作教學 →</a>
           <a href="ai-collaboration.html#design-prompts" class="btn btn-ghost btn-sm">看提示詞範本</a>
+          <a href="design-guide.html" class="btn btn-ghost btn-sm">提示詞產生器</a>
         </div>
       </div>
 
@@ -164,6 +165,20 @@
         </ul>
         <div class="card-btn-row">
           <a href="components.html" class="btn btn-red btn-sm">查看元件百科 →</a>
+        </div>
+      </div>
+
+      <div class="feature-card purple">
+        <div class="icon-block">→ AI</div>
+        <h3>AI 設計指南</h3>
+        <p class="desc">互動工具：把玩法、過關條件、零件接腳填一填，一鍵組成可以直接貼給 AI 的提示詞，還有 10 條 AI 常漏的技術要點清單。</p>
+        <ul class="check-list">
+          <li>五步驟設計流程與規格表</li>
+          <li>填表即生成的提示詞產生器</li>
+          <li>可切換教室投影用的簡報模式</li>
+        </ul>
+        <div class="card-btn-row">
+          <a href="design-guide.html" class="btn btn-purple btn-sm">開始設計 →</a>
         </div>
       </div>
 
@@ -275,15 +290,139 @@
         <a class="card-link" href="machines/christmas-tree.html">查看教學 →</a>
       </div>
 
-      <div class="card highlight">
-        <span class="ref">EXTRA · AI 協作</span>
-        <h3>如何用 AI 一起做機台</h3>
-        <p>從關卡邏輯與劇情發想，到程式碼協作與除錯，用解謎機關作為完整案例示範。</p>
-        <div class="tag-row"><span class="tag">關卡設計</span><span class="tag">程式除錯</span></div>
-        <a class="card-link" href="ai-collaboration.html">查看教學 →</a>
-      </div>
-
     </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">// EXPANSION PACK</span>
+      <h2>13 款進階提案，依遊戲類型分類</h2>
+      <p>這批機台的硬體更多元、玩法也更完整，依照核心體驗分成四大類型。難度標示僅供參考，不代表閱讀或製作順序。</p>
+    </div>
+
+    <h3 style="margin-bottom:6px;">一、雙人無線連線對戰系列</h3>
+    <p style="margin-bottom:20px; font-size:0.92rem;">用 Arduino Uno R4 WiFi 內建的無線功能，讓兩台機台即時互動對戰，不需要額外的通訊模組。</p>
+    <div class="card-grid">
+      <div class="card">
+        <span class="ref">M9 · ★★★☆☆</span>
+        <h3>像素拔河</h3>
+        <p>兩台機台的燈條連成一條拔河繩，連打按鈕把燈光推向對方，單人可切換電腦 AI 對手。</p>
+        <div class="tag-row"><span class="tag">WiFi 對戰</span><span class="tag">RGB 燈條</span></div>
+        <a class="card-link" href="machines/tug-of-war-wifi.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M10 · ★★★★☆</span>
+        <h3>太空攔截戰</h3>
+        <p>各自操作戰機擊落隕石，清空一整排就能送干擾訊號讓對方畫面出現大隕石或雜訊。</p>
+        <div class="tag-row"><span class="tag">WiFi 對戰</span><span class="tag">OLED</span></div>
+        <a class="card-link" href="machines/space-defense.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M11 · ★★★☆☆</span>
+        <h3>反應力決鬥</h3>
+        <p>兩台機台同步倒數，燈同時亮起後比誰先拔槍，反應時間透過 WiFi 互相比較判定勝負。</p>
+        <div class="tag-row"><span class="tag">WiFi 對戰</span><span class="tag">反應力</span></div>
+        <a class="card-link" href="machines/wild-gunman.html">查看教學 →</a>
+      </div>
+    </div>
+
+    <h3 style="margin:36px 0 6px;">二、體感、速度與物理力量系列</h3>
+    <p style="margin-bottom:20px; font-size:0.92rem;">著重玩家的身體操作反應、打擊力度與手眼協調，做出真正「打得到」的實體機關。</p>
+    <div class="card-grid">
+      <div class="card">
+        <span class="ref">M12 · ★★★☆☆</span>
+        <h3>雷射神射手</h3>
+        <p>雷射光束瞄準光敏電阻標靶，擊中後標靶實體倒下並計分，計時結束自動復位。</p>
+        <div class="tag-row"><span class="tag">雷射</span><span class="tag">伺服馬達</span></div>
+        <a class="card-link" href="machines/laser-shooter.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M13 · ★★★★☆</span>
+        <h3>節奏力士</h3>
+        <p>燈條引導節奏，玩家要在正確時機用力敲擊壓力感測區，同時判斷時機與力度給分。</p>
+        <div class="tag-row"><span class="tag">壓力感測</span><span class="tag">音樂節奏</span></div>
+        <a class="card-link" href="machines/rhythm-striker.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M14 · ★★☆☆☆</span>
+        <h3>桌上型打地鼠</h3>
+        <p>多個按鈕代表地洞，燈亮要迅速敲擊，可加入紅綠燈規則或記憶模式增加難度。</p>
+        <div class="tag-row"><span class="tag">反應力</span><span class="tag">多按鈕</span></div>
+        <a class="card-link" href="machines/mini-whac-a-mole.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M15 · ★★★☆☆</span>
+        <h3>大力士拳擊測力機</h3>
+        <p>用力擊打感測墊，燈條依力道由下往上衝，並在顯示器上留下最高紀錄。</p>
+        <div class="tag-row"><span class="tag">壓力感測</span><span class="tag">力量條</span></div>
+        <a class="card-link" href="machines/punch-power-meter.html">查看教學 →</a>
+      </div>
+    </div>
+
+    <h3 style="margin:36px 0 6px;">三、記憶、邏輯與精密解謎系列</h3>
+    <p style="margin-bottom:20px; font-size:0.92rem;">考驗記憶力、邏輯推導與時間壓力下的解謎技巧，很適合做成實體密室逃脫機關。</p>
+    <div class="card-grid">
+      <div class="card">
+        <span class="ref">M16 · ★★☆☆☆</span>
+        <h3>記憶音符</h3>
+        <p>經典 Simon Says 玩法，依序記住並按回聲光提示的順序，關卡會越來越長。</p>
+        <div class="tag-row"><span class="tag">記憶挑戰</span><span class="tag">聲光提示</span></div>
+        <a class="card-link" href="machines/memory-notes.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M17 · ★★★★☆</span>
+        <h3>金庫解碼大師</h3>
+        <p>旋轉編碼器逐位設定密碼，OLED 顯示進度，正確解鎖時電磁閥彈開金庫門。</p>
+        <div class="tag-row"><span class="tag">旋轉編碼器</span><span class="tag">電磁閥</span></div>
+        <a class="card-link" href="machines/vault-cracker.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M18 · ★★★★★</span>
+        <h3>炸彈拆除模擬器</h3>
+        <p>倒數計時中依照 OLED 邏輯謎題撥動開關、拔除引線，全對才能成功拆彈。</p>
+        <div class="tag-row"><span class="tag">邏輯謎題</span><span class="tag">倒數計時</span></div>
+        <a class="card-link" href="machines/bomb-defuser.html">查看教學 →</a>
+      </div>
+    </div>
+
+    <h3 style="margin:36px 0 6px;">四、機械機構、派對與運氣系列</h3>
+    <p style="margin-bottom:20px; font-size:0.92rem;">著重連續機械作動結構，或適合多人派對上比拼運氣與膽量的刺激機台。</p>
+    <div class="card-grid">
+      <div class="card">
+        <span class="ref">M19 · ★★★☆☆</span>
+        <h3>電流急急棒</h3>
+        <p>手持金屬環穿過彎曲導線軌道，一碰到就扣血警報，考驗手部穩定度。</p>
+        <div class="tag-row"><span class="tag">機構挑戰</span><span class="tag">穩定度</span></div>
+        <a class="card-link" href="machines/steady-hand.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M20 · ★★★★☆</span>
+        <h3>復古黃金推幣機</h3>
+        <p>馬達帶動推板持續前後推擠，抓時機投幣，掉落收集槽自動偵測得分。</p>
+        <div class="tag-row"><span class="tag">馬達機構</span><span class="tag">街機重現</span></div>
+        <a class="card-link" href="machines/coin-pusher.html">查看教學 →</a>
+      </div>
+      <div class="card">
+        <span class="ref">M21 · ★★★☆☆</span>
+        <h3>俄羅斯輪盤機</h3>
+        <p>模擬左輪手槍機率，輪流扣板機，安全喀喀聲或觸發安全的novelty懲罰機關。</p>
+        <div class="tag-row"><span class="tag">機率邏輯</span><span class="tag">派對遊戲</span></div>
+        <a class="card-link" href="machines/russian-roulette.html">查看教學 →</a>
+      </div>
+    </div>
+
+    <div class="card highlight" style="margin-top:20px;">
+      <span class="ref">EXTRA · AI 協作</span>
+      <h3>如何用 AI 一起做機台</h3>
+      <p>從關卡邏輯與劇情發想，到程式碼協作與除錯，用解謎機關作為完整案例示範。</p>
+      <div class="tag-row"><span class="tag">關卡設計</span><span class="tag">程式除錯</span></div>
+      <a class="card-link" href="ai-collaboration.html">查看教學 →</a>
+    </div>
+
   </div>
 </section>
 
