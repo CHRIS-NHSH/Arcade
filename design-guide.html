@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 設計指南｜Arduino Game Lab</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* 本頁專用：簡報模式（僅這頁使用，不放進全站共用樣式表） */
+  #presentBtn{
+    position:fixed; top:16px; right:16px; z-index:30; border:1px solid var(--border);
+    background: var(--surface); color: var(--teal-dark); border-radius: var(--radius-pill);
+    padding:9px 18px; font-family: var(--font-body); font-size:0.85rem; font-weight:700; cursor:pointer;
+    box-shadow: var(--shadow);
+  }
+  #presentBtn:hover{ border-color: var(--teal); }
+  #slideNav{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:60; display:none;
+    align-items:center; gap:8px; background: var(--text); border-radius: var(--radius-pill); padding:8px 10px;
+    box-shadow: 0 14px 34px -12px rgba(0,0,0,0.4);
+  }
+  body.present #slideNav{ display:flex; }
+  #slideNav button{
+    border:none; background:transparent; color:#fff; font-size:18px; cursor:pointer;
+    width:38px; height:38px; border-radius:50%; font-family: var(--font-body);
+  }
+  #slideNav button:hover{ background: rgba(255,255,255,0.15); }
+  #slideNav .count{ font-family: var(--font-mono); font-size:0.82rem; color:#cbd3da; min-width:56px; text-align:center; }
+  body.present{ overflow:hidden; background: var(--bg); }
+  body.present .site-header, body.present .breadcrumb, body.present footer,
+  body.present .page-nav, body.present #presentBtn{ display:none; }
+  body.present .guide-header, body.present section{ display:none; }
+  body.present .slide-active{
+    display:block; position:fixed; inset:0; overflow:auto; padding:8vh 8vw 14vh; margin:0;
+    background: var(--bg); animation:slidein .25s ease;
+  }
+  @keyframes slidein{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+  body.present .slide-active > *{ max-width:820px; margin-left:auto; margin-right:auto; }
+  body.present .slide-active h1{ font-size:2.6rem; }
+  body.present .slide-active h2{ font-size:1.8rem; }
+  @media print{
+    .site-header, .breadcrumb, .page-nav, footer, #presentBtn, .genbtns{ display:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> ARDUINO GAME LAB <span class="free-badge">免費開放</span></div>
+    <div class="nav-links">
+      <a href="index.html#machines">機台教學</a>
+      <a href="components.html">元件百科</a>
+      <a href="ai-collaboration.html">AI 協作</a>
+      <a href="index.html#start">開始使用</a>
+    </div>
+    <a href="index.html#machines" class="nav-cta">開始動手做 →</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="index.html">首頁</a> / <a href="ai-collaboration.html">AI 協作</a> / AI 設計指南</div>
+
+<div class="wrap guide-wrap">
+  <header class="guide-header" style="padding:36px 0 8px; text-align:left;">
+    <span class="eyebrow">// STUDENT GUIDE</span>
+    <h1>用 AI 做出你的遊戲機台</h1>
+    <p class="lead">如何用 AI 協助設計並做出一台像 <a href="index.html#machines">機台教學庫</a> 裡那樣好玩的 Arduino 遊戲機台。重點不在會不會叫 AI 生程式碼，而在想不想得清楚——一台好玩的機台，玩法、零件、回饋該怎麼配。</p>
+    <div class="quicknav" style="margin-top:18px;">
+      <a href="#idea">核心觀念</a>
+      <a href="#flow">製作步驟</a>
+      <a href="#spec">設計規格</a>
+      <a href="#gen">提示詞產生器</a>
+      <a href="#habit">好習慣</a>
+      <a href="#publish">測試與展示</a>
+    </div>
+  </header>
+
+  <hr class="divider" style="margin:32px 0;">
+
+  <section id="idea">
+    <h2 class="numbered"><span class="section-num">1</span>核心觀念</h2>
+    <p>與其叫 AI 從零生出一整台機台，不如先把設計想清楚，再請它實作程式碼。為什麼？因為 AI 生出來的程式碼<strong>「看起來能編譯、能燒錄」不代表電路跟玩法真的對</strong>——要做的，是把想法講清楚、再一一驗收。這頁要練的，是兩件帶得走的能力：</p>
+    <div class="card">
+      <p style="margin:0 0 10px;"><strong>一、把設計想清楚</strong>，再開口問 AI。先寫好規格與接腳表，AI 才生得準（見下方規格）。</p>
+      <p style="margin:0;"><strong>二、會驗收自己的成果</strong>。會用三用電表量、會看 Serial Monitor、會一個零件一個零件單獨測。</p>
+    </div>
+    <div class="note">
+      <p>一句話：別只想著「叫 AI 生一份 .ino 給我」，而是先當設計師、再當工程師、最後當品管。這三件事換任何題目、任何板子都用得上。</p>
+    </div>
+  </section>
+
+  <hr class="divider" style="margin:36px 0;">
+
+  <section id="flow">
+    <h2 class="numbered"><span class="section-num">2</span>一台機台怎麼做出來</h2>
+    <p style="color:var(--text-mute); font-size:0.9rem;">先看整個流程，後面幾段再一一細談。</p>
+    <ol class="steps">
+      <li><strong>玩 + 拆解</strong>：先玩現有機台或範例，拆解它的玩法、用了哪些零件、怎麼給玩家回饋——也就是下面要教的「規格」。</li>
+      <li><strong>寫規格</strong>：把想做的機台，玩法、零件、接腳表填清楚——這一步先別碰 AI。</li>
+      <li><strong>單元測試</strong>：先在麵包板上把每個零件（按鈕、LED、蜂鳴器、馬達…）各自接好、各自測過會動，再談整合。</li>
+      <li><strong>用 AI 實作</strong>：把規格 + 技術要點用下面的產生器組成提示詞，貼給 AI，邊生、邊燒錄、邊測。</li>
+      <li><strong>互測 + 展示</strong>：跟同學交換玩、回報問題、修好、再展示。機台本來就是要被別人玩的。</li>
+    </ol>
+  </section>
+
+  <hr class="divider" style="margin:36px 0;">
+
+  <section id="spec">
+    <h2 class="numbered"><span class="section-num">3</span>設計規格</h2>
+    <p style="color:var(--text-mute); font-size:0.9rem;">網站上的機台教學都遵循同一套結構。動手前先把這份規格想清楚，先別急著找 AI。</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3 style="margin-bottom:6px;">玩法是什麼？</h3>
+        <p style="margin:0; font-size:0.9rem;">玩家看到什麼、操作哪個零件（按鈕、搖桿、光敏電阻…）、要做什麼動作？</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:6px;">怎樣算過關／得分？</h3>
+        <p style="margin:0; font-size:0.9rem;">一個明確、不含糊、能用數字判斷的成功條件。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:6px;">過關給什麼回饋？</h3>
+        <p style="margin:0; font-size:0.9rem;">LED 燈效、蜂鳴器音效、伺服馬達動作、LCD／OLED 顯示文字，擇一或組合。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:6px;">零件與接腳？</h3>
+        <p style="margin:0; font-size:0.9rem;">用了哪些元件（Arduino Uno R4、按鈕、LED、蜂鳴器、伺服馬達、感測器…），各接哪一支腳位。這決定電路真正接不接得起來，最容易被忘記，卻最影響能不能動。</p>
+      </div>
+    </div>
+
+    <details class="spec-card" style="margin-top:20px;">
+      <summary><strong>參數能調什麼？</strong> <span class="tag">進階選用</span></summary>
+      <div class="body">
+        <p style="margin:0; font-size:0.9rem;">參數是為了之後能快速調整難度（時間限制、分數門檻、感測器靈敏度），可以用可調電位器、序列埠指令，或 Uno R4 WiFi 版做網頁後台。對機台能不能玩不是必要的，先做出能玩的版本，行有餘力再加。</p>
+      </div>
+    </details>
+  </section>
+
+  <hr class="divider" style="margin:36px 0;">
+
+  <section id="gen">
+    <h2 class="numbered"><span class="section-num">4</span>規格 → 提示詞產生器</h2>
+    <p style="color:var(--text-mute); font-size:0.9rem;">把規格填一填，下面的技術要點建議全勾（它們會附在提示最後），按「產生提示詞」就會組出一段可直接貼給 AI 的提示。這就是把設計變成 AI 看得懂的需求。</p>
+
+    <div class="card">
+      <span class="field-label">① 玩法（玩家操作哪個零件、做什麼動作）</span>
+      <textarea class="field" id="qPlay" placeholder="例如：玩家要在限定時間內連續按對四顆按鈕對應的顏色，按對才算過關。"></textarea>
+
+      <span class="field-label">② 怎樣算過關／得分</span>
+      <textarea class="field" id="qWin" placeholder="例如：四顆按鈕依正確順序按完、且總時間在 30 秒內。"></textarea>
+
+      <span class="field-label">③ 過關後給玩家的回饋</span>
+      <textarea class="field" id="qClue" placeholder="例如：蜂鳴器播放勝利音效、伺服馬達打開一個小門、LED 全部閃爍三次。"></textarea>
+
+      <span class="field-label">④ 使用的零件與接腳</span>
+      <textarea class="field" id="qParts" placeholder="例如：Arduino Uno R4 Minima、4 顆按鈕接 D2–D5（INPUT_PULLUP）、蜂鳴器接 D8、伺服馬達訊號線接 D9、4 顆 LED 分別接 D10–D13。"></textarea>
+
+      <span class="field-label">⑤ 參數能調整什麼（進階選用，可留空）</span>
+      <textarea class="field" id="qAdmin" placeholder="不一定要做。若想之後方便改：時間限制、按鍵順序、音效開關…"></textarea>
+
+      <span class="field-label" style="margin-top:22px;">技術要點：AI 常漏、建議全勾（會附在提示詞最後）</span>
+      <p style="margin:2px 0 8px; font-size:0.85rem; color:var(--text-mute);">這幾條 AI 容易漏、漏了又不容易發現，每條都標了「沒寫會怎樣」。</p>
+      <div id="checks"></div>
+
+      <div class="btn-row" style="margin-top:18px;">
+        <button class="btn btn-primary" id="genBtn" type="button">產生提示詞</button>
+        <button class="btn btn-ghost" id="copyBtn" type="button">複製<span class="copied-msg" id="copied"></span></button>
+      </div>
+      <div class="output-box" id="out"></div>
+    </div>
+  </section>
+
+  <hr class="divider" style="margin:36px 0;">
+
+  <section id="habit">
+    <h2 class="numbered"><span class="section-num">5</span>要養成的習慣</h2>
+    <ul class="plain">
+      <li><strong>驗證，不盲信。</strong>AI 給的程式碼，每個功能都自己實測：按鈕在 Serial Monitor 看得到訊號嗎？LED 真的會亮嗎？馬達會不會抖動或過熱？供電夠不夠？</li>
+      <li><strong>會回報問題。</strong>講「具體現象」而不是只說「壞了」。試試這個句型：<br><em>「我按了＿＿，預期會＿＿，結果卻＿＿。」</em>能附上 Serial Monitor 截圖或接線照片更好，這樣 AI 才修得準。</li>
+      <li><strong>需求講滿、工作切小。</strong>一開始把零件、接腳、規則一次講清楚，沒講的 AI 會自己猜；後續修改一次只改一個功能，改一段、燒錄一段、驗一段，才抓得到錯、保持得住掌控。這不只對 AI，做任何專題都適用。</li>
+    </ul>
+  </section>
+
+  <hr class="divider" style="margin:36px 0;">
+
+  <section id="publish">
+    <h2 class="numbered"><span class="section-num">6</span>做好之後：測試與展示</h2>
+    <p style="color:var(--text-mute); font-size:0.9rem;">機台做好之後，重點是能穩定被別人玩、也能被別人看懂你怎麼做的。兩件事都做，這個專題才算完整。</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3 style="margin-bottom:4px;">GitHub</h3>
+        <p style="margin:0 0 10px; color:var(--text-mute); font-size:0.85rem;">保存程式碼與版本紀錄</p>
+        <p style="margin:0 0 12px; font-size:0.9rem;">把 <code>.ino</code> 程式碼、接線圖（或 Fritzing 檔）、零件清單放進同一個倉庫，改完重新上傳就有紀錄，之後想回溯某一版也找得到。</p>
+        <p style="margin:0 0 12px; font-size:0.85rem; color:var(--text-soft);">建倉庫 → 上傳程式碼與接線圖 → 寫一份 <code>README.md</code> 說明零件與玩法</p>
+        <a href="https://github.com/signup" target="_blank" rel="noopener">→ 註冊 GitHub</a>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:4px;">展示影片／QR Code</h3>
+        <p style="margin:0 0 10px; color:var(--text-mute); font-size:0.85rem;">讓沒帶機台在身邊的人也能看懂</p>
+        <p style="margin:0 0 12px; font-size:0.9rem;">錄一段 30–60 秒的操作示範，完整拍到「玩法 → 過關 → 回饋」。上傳後用 QR code 貼在機台旁，展示時掃碼就能看。</p>
+        <p style="margin:0; font-size:0.85rem; color:var(--text-soft);">若是 Arduino Uno R4 WiFi 版，也可以做一個網頁後台即時顯示分數，再用同樣方式部署到 GitHub Pages。</p>
+      </div>
+    </div>
+    <div class="note" style="margin-top:20px;">
+      <p>怎麼選：先求「機台能穩定被玩」再談展示形式。程式碼上 GitHub、接線圖拍照存證、留一段展示影片，這三件事做齊，別人不用在場也能懂你做了什麼、怎麼做的。</p>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+<div class="wrap page-nav">
+  <a href="ai-collaboration.html">← 回 AI 協作教學</a>
+  <a href="index.html#machines">回機台教學 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ARDUINO GAME LAB — 教學範例網站</span>
+    <span>內容僅供學習參考</span>
+  </div>
+</footer>
+
+<button id="presentBtn" type="button">▶ 簡報模式</button>
+<div id="slideNav">
+  <button id="slidePrev" title="上一頁 (←)" type="button">◀</button>
+  <span class="count" id="slideCount"></span>
+  <button id="slideNext" title="下一頁 (→)" type="button">▶</button>
+  <button id="slideExit" title="離開 (Esc)" type="button">✕</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var header = document.querySelector(".guide-wrap > .guide-header");
+  var slides = [header].concat(Array.prototype.slice.call(document.querySelectorAll(".guide-wrap > section")));
+  var cur = 0, on = false;
+  var countEl = document.getElementById("slideCount");
+  function show(i){
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, idx){ s.classList.toggle("slide-active", idx === cur); });
+    countEl.textContent = (cur + 1) + " / " + slides.length;
+    if (slides[cur]) slides[cur].scrollTop = 0;
+  }
+  function enter(){ on = true; document.body.classList.add("present"); show(0); }
+  function exit(){ on = false; document.body.classList.remove("present"); slides.forEach(function(s){ s.classList.remove("slide-active"); }); }
+  function next(){ if (cur < slides.length - 1) show(cur + 1); }
+  function prev(){ if (cur > 0) show(cur - 1); }
+  document.getElementById("presentBtn").addEventListener("click", enter);
+  document.getElementById("slideNext").addEventListener("click", next);
+  document.getElementById("slidePrev").addEventListener("click", prev);
+  document.getElementById("slideExit").addEventListener("click", exit);
+  document.addEventListener("keydown", function(e){
+    if (!on) return;
+    if (e.key === "Escape"){ exit(); return; }
+    var tag = ((e.target && e.target.tagName) || "").toUpperCase();
+    if (tag === "TEXTAREA" || tag === "INPUT") return;
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown"){ e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); prev(); }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var TECH = [
+    { rule:"按鈕、開關等輸入要做 debounce（防彈跳）處理，避免機械接點瞬間彈跳造成誤判。", why:"沒寫 → 按一下卻觸發好幾次判定，分數或關卡狀態會亂跳。" },
+    { rule:"主迴圈避免用 delay() 長時間阻塞，需要同時計時或同時反應多個輸入時改用 millis()。", why:"沒寫 → LED 閃爍或蜂鳴器響的時候，整台機台會卡住、按鈕沒反應。" },
+    { rule:"數位輸入腳位用 INPUT_PULLUP 或外接上／下拉電阻，避免浮接雜訊。", why:"沒寫 → 按鈕沒按也會亂觸發，或觸發後彈不回來。" },
+    { rule:"伺服馬達、繼電器、馬達等大電流元件要獨立供電，不要只靠 Arduino 的 5V 輸出。", why:"沒寫 → 馬達一動整板電壓下降，LED 閃爍或板子重開機。" },
+    { rule:"LED、蜂鳴器等輸出腳位要加上限流電阻（LED 常見 220–330Ω）。", why:"沒寫 → 長時間使用電流過大，零件過熱或縮短壽命，甚至燒毀。" },
+    { rule:"「重新開始」時，所有變數（分數、計時器、關卡狀態、已按過的按鈕）要真的歸零。", why:"沒寫 → 玩第二輪會殘留上一輪的分數或狀態，判定跟著錯。" },
+    { rule:"過關／得分的判定條件要用具體數值寫死，不要讓程式自己猜。", why:"沒寫 → AI 會自己猜一個鬆散條件，容易誤判過關或過不了關。" },
+    { rule:"在關鍵地方用 Serial.println() 印出除錯訊息，方便用序列埠監控視窗排查。", why:"沒寫 → 機台不動時完全不知道卡在硬體還是程式的哪一步。" },
+    { rule:"若有隨機出題或打亂順序，要確保一定有解、也不會一開機就已經過關。", why:"沒寫 → 偶爾一開機就過關，或題目根本解不開。" },
+    { rule:"上傳程式前先確認開發板型號與連接埠（Arduino Uno R4 Minima／WiFi）選對。", why:"沒寫 → 編譯或上傳失敗，或把程式燒錄到錯的裝置。" }
+  ];
+
+  var checks = document.getElementById("checks");
+  TECH.forEach(function(t, i){
+    var lab = document.createElement("label"); lab.className = "check-row";
+    var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = true; cb.dataset.i = i;
+    var sp = document.createElement("span");
+    var why = t.why.replace(/^[^→]*→\s*/, "");
+    sp.innerHTML = '<span class="rule">' + escapeHtml(t.rule) + '</span><br><span class="why"><b>沒寫會：</b>' + escapeHtml(why) + '</span>';
+    lab.appendChild(cb); lab.appendChild(sp); checks.appendChild(lab);
+  });
+
+  function escapeHtml(s){ return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function val(id){ return document.getElementById(id).value.trim(); }
+
+  var lastPrompt = "";
+  function build(){
+    var play = val("qPlay"), win = val("qWin"), clue = val("qClue"), parts = val("qParts"), admin = val("qAdmin");
+    var p = "我想做一個給同學玩的 Arduino 遊戲機台專題，使用 Arduino Uno R4。請用 Arduino C/C++ 寫出完整的單一 .ino 檔案，程式內註解用繁體中文。\n\n";
+    p += "【玩法】\n" + (play || "（請描述玩家操作哪個零件、要做什麼動作）") + "\n\n";
+    p += "【怎樣算過關／得分】\n" + (win || "（請描述明確、可用數字判斷的成功條件）") + "\n\n";
+    p += "【過關後給玩家的回饋】\n" + (clue || "（例如：燈效、音效、馬達動作或顯示文字）") + "\n\n";
+    p += "【零件與接腳】\n" + (parts || "（請列出所有零件與各自接的腳位）") + "\n\n";
+    if (admin) p += "【參數要能調整的東西（選用）】\n" + admin + "\n\n";
+    var picked = [];
+    Array.prototype.forEach.call(checks.querySelectorAll("input"), function(cb){ if (cb.checked) picked.push(TECH[+cb.dataset.i].rule); });
+    if (picked.length){
+      p += "請務必遵守以下技術要點：\n";
+      picked.forEach(function(r, i){ p += (i + 1) + ". " + r + "\n"; });
+      p += "\n";
+    }
+    p += "先簡單說明你打算怎麼做（含接線方式），再給我完整的 .ino 程式碼。";
+    lastPrompt = p;
+    var out = document.getElementById("out"); out.textContent = p; out.classList.add("show");
+    document.getElementById("copied").textContent = "";
+  }
+  document.getElementById("genBtn").addEventListener("click", build);
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    if (!lastPrompt) build();
+    var done = function(){ document.getElementById("copied").textContent = "已複製！"; };
+    var fail = function(){ document.getElementById("copied").textContent = "請手動選取複製"; };
+    if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(lastPrompt).then(done, fail); }
+    else {
+      try { var ta = document.createElement("textarea"); ta.value = lastPrompt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done(); } catch (e) { fail(); }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
